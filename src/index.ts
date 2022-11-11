@@ -6,6 +6,7 @@ import { User } from "./entity/User";
 import cors from "cors";
 import credentials from "./middleware/credentials";
 import bcrypt from "bcrypt";
+import cookieParser from "cookie-parser";
 
 AppDataSource
     .initialize()
@@ -18,9 +19,14 @@ AppDataSource
 
 const app = express();
 
+//config
 app.use(express.json());
 app.use(credentials);
 app.use(cors(corsOptions));
+app.use(cookieParser());
+
+//middleware
+
 
 app.post('/login', async(req: Request, res: Response, next:Function) => {
     let { user, pwd } = req.body;
@@ -28,13 +34,29 @@ app.post('/login', async(req: Request, res: Response, next:Function) => {
         let foundUser = await User.find({
                                     where: { userName:req.body.user }
                                 })
-        if (foundUser[0].userName == req.body.user && await bcrypt.compareSync(pwd, foundUser[0].passWord)) res.status(200).json({"message":"login success"});
+        if (foundUser[0].userName == user && await bcrypt.compareSync(pwd, foundUser[0].passWord)) {
+            let data = {
+                id_user : foundUser[0].id,
+                user : foundUser[0].userName,
+            }
+            res.cookie("auth", data, {
+                                httpOnly:false, sameSite:'Lax', secure:false, maxAge: 24 * 60 * 60 * 1000 
+                            }).json({"message":"ok"})
+        };
     } catch (error) {
        next(error); 
     }
 })
 
-app.post('/register', async(req: Request, res: Response, next:Function) => {
+app.get('/logout',async (req: Request, res: Response, next: Function) => {
+    const cookies = req.cookie;
+    if (!cookies?.auth) return res.sendStatus(204);
+
+    res.clearCookie("auth");
+    res.end();
+})
+
+app.post('/register', async(req: Request, res: Response, next: Function) => {
     let { user, pwd } = req.body;
     try {
         let pwdHash:string = bcrypt.hashSync(pwd, 10);

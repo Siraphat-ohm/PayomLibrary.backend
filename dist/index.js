@@ -19,6 +19,7 @@ const User_1 = require("./entity/User");
 const cors_1 = __importDefault(require("cors"));
 const credentials_1 = __importDefault(require("./middleware/credentials"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 data_source_1.AppDataSource
     .initialize()
     .then(() => {
@@ -28,21 +29,39 @@ data_source_1.AppDataSource
     console.log("Error initalize", err);
 });
 const app = (0, express_1.default)();
+//config
 app.use(express_1.default.json());
 app.use(credentials_1.default);
 app.use((0, cors_1.default)(corsOptions_1.default));
+app.use((0, cookie_parser_1.default)());
+//middleware
 app.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let { user, pwd } = req.body;
     try {
         let foundUser = yield User_1.User.find({
             where: { userName: req.body.user }
         });
-        if (foundUser[0].userName == req.body.user && (yield bcrypt_1.default.compareSync(pwd, foundUser[0].passWord)))
-            res.status(200).json({ "message": "login success" });
+        if (foundUser[0].userName == user && (yield bcrypt_1.default.compareSync(pwd, foundUser[0].passWord))) {
+            let data = {
+                id_user: foundUser[0].id,
+                user: foundUser[0].userName,
+            };
+            res.cookie("auth", data, {
+                httpOnly: false, sameSite: 'Lax', secure: false, maxAge: 24 * 60 * 60 * 1000
+            }).json({ "message": "ok" });
+        }
+        ;
     }
     catch (error) {
         next(error);
     }
+}));
+app.get('/logout', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const cookies = req.cookie;
+    if (!(cookies === null || cookies === void 0 ? void 0 : cookies.auth))
+        return res.sendStatus(204);
+    res.clearCookie("auth");
+    res.end();
 }));
 app.post('/register', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let { user, pwd } = req.body;
