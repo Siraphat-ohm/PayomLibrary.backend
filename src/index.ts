@@ -34,8 +34,12 @@ app.use(cookieParser());
 
 //routes
 import login from "./routes/login";
+import logout from "./routes/logout";
+import auth from "./routes/auth";
 
 app.use('/login', login);
+app.use('/logout', logout);
+app.use('/auth', auth);
 
 app.post('/register', async(req: Request, res: Response, next: Function) => {
     let { user, pwd } = req.body;

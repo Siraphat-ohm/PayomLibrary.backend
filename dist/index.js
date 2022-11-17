@@ -43,7 +43,11 @@ app.use((0, cors_1.default)(corsOptions_1.default));
 app.use((0, cookie_parser_1.default)());
 //routes
 const login_1 = __importDefault(require("./routes/login"));
+const logout_1 = __importDefault(require("./routes/logout"));
+const auth_1 = __importDefault(require("./routes/auth"));
 app.use('/login', login_1.default);
+app.use('/logout', logout_1.default);
+app.use('/auth', auth_1.default);
 app.post('/register', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let { user, pwd } = req.body;
     try {
