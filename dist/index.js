@@ -20,7 +20,7 @@ const cors_1 = __importDefault(require("cors"));
 const credentials_1 = __importDefault(require("./middleware/credentials"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const sessions = require("express-session");
+const session = require("express-session");
 data_source_1.AppDataSource
     .initialize()
     .then(() => {
@@ -31,7 +31,7 @@ data_source_1.AppDataSource
 });
 const app = (0, express_1.default)();
 //config
-app.use(sessions({
+app.use(session({
     secret: "test",
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
@@ -41,25 +41,9 @@ app.use(express_1.default.json());
 app.use(credentials_1.default);
 app.use((0, cors_1.default)(corsOptions_1.default));
 app.use((0, cookie_parser_1.default)());
-//middleware
-var session;
-app.post('/login', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let { user, pwd } = req.body;
-    try {
-        let foundUser = yield User_1.User.find({
-            where: { userName: req.body.user }
-        });
-        if (foundUser[0].userName == user && (yield bcrypt_1.default.compareSync(pwd, foundUser[0].passWord))) {
-            session = req.session;
-            session.userid = foundUser[0].id;
-            session.username = foundUser[0].userName;
-            res.status(200).json({ "message": "login success." });
-        }
-    }
-    catch (error) {
-        next(error);
-    }
-}));
+//routes
+const login_1 = __importDefault(require("./routes/login"));
+app.use('/login', login_1.default);
 app.post('/register', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let { user, pwd } = req.body;
     try {
@@ -72,8 +56,8 @@ app.post('/register', (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 }));
 app.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(session);
-    res.status(200).json({ "message": "I think I am Ok. :(" });
+    console.log(req.session);
+    res.status(200).json({ "message": "Ok" });
 }));
 app.listen(9999, () => {
     console.log("server start port : 9999");

@@ -7,7 +7,7 @@ import cors from "cors";
 import credentials from "./middleware/credentials";
 import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
-import sessions = require("express-session");
+import session = require("express-session");
 
 AppDataSource
     .initialize()
@@ -21,7 +21,7 @@ AppDataSource
 const app = express();
 
 //config
-app.use(sessions({
+app.use(session({
     secret: "test",
     saveUninitialized: true,
     cookie: {maxAge: 1000 * 60 * 60 * 24},
@@ -31,6 +31,11 @@ app.use(express.json());
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
+//routes
+import login from "./routes/login";
+
+app.use('/login', login);
 
 app.post('/register', async(req: Request, res: Response, next: Function) => {
     let { user, pwd } = req.body;
@@ -44,8 +49,8 @@ app.post('/register', async(req: Request, res: Response, next: Function) => {
 })
 
 app.get('/',async(req:Request, res:Response, next:Function) => {
-    console.log(session);
-    res.status(200).json({"message":"I think I am Ok. :("});
+    console.log(req.session);
+    res.status(200).json({"message":"Ok"});
     
 })
 

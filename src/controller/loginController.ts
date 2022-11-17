@@ -1,8 +1,9 @@
-import { Response } from "express";
+import { Request, Response } from "express";
+import { User } from "../entity/User";
 
 const bcrypt = require('bcrypt');
 
-const handleLogin = async (req:Response, res:Response) => {
+const handleLogin = async (req:Request, res:Response, next:Function) => {
     let session;
     let { user, pwd } = req.body;
     try {
@@ -10,7 +11,7 @@ const handleLogin = async (req:Response, res:Response) => {
                                     where: { userName:req.body.user }
                                 })
         if (foundUser[0].userName == user && await bcrypt.compareSync(pwd, foundUser[0].passWord)) {
-            session = req.sessions;
+            session = req.session;
             session.userid = foundUser[0].id;
             session.username = foundUser[0].userName;
             res.status(200).json({"message":"login success."});
@@ -20,3 +21,5 @@ const handleLogin = async (req:Response, res:Response) => {
     }
     
 }
+
+export default { handleLogin }
