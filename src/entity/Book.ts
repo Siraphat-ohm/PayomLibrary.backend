@@ -10,12 +10,12 @@ export class Book extends BaseEntity{
     title: string
 
     @Column()
-    category_id:string 
+    category_id: string 
 
     @Column()
-    publication_date:Date
+    publication_date: Date
 
     @Column()
-    copies_owned:string
+    copies_owned: string
 
 }
