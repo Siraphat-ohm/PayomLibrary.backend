@@ -1,3 +1,4 @@
+import { Blob } from "buffer"
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm"
 
 @Entity()
@@ -17,5 +18,8 @@ export class Book extends BaseEntity{
 
     @Column()
     copies_owned: string
+
+    @Column("blob")
+    graphic: Blob 
 
 }
