@@ -41,22 +41,6 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/auth', auth);
 
-app.post('/register', async(req: Request, res: Response, next: Function) => {
-    let { user, pwd } = req.body;
-    try {
-        let pwdHash:string = bcrypt.hashSync(pwd, 10);
-        await User.insert({ userName:user, passWord:pwdHash });
-        res.sendStatus(200);
-    } catch (error) {
-       next(error); 
-    }
-})
-
-app.get('/',async(req:Request, res:Response, next:Function) => {
-    console.log(req.session);
-    res.status(200).json({"message":"Ok"});
-    
-})
 
 app.listen(9999, () => {
     console.log("server start port : 9999");

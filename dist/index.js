@@ -45,9 +45,11 @@ app.use((0, cookie_parser_1.default)());
 const login_1 = __importDefault(require("./routes/login"));
 const logout_1 = __importDefault(require("./routes/logout"));
 const auth_1 = __importDefault(require("./routes/auth"));
+const createBook_1 = __importDefault(require("./routes/createBook"));
 app.use('/login', login_1.default);
 app.use('/logout', logout_1.default);
 app.use('/auth', auth_1.default);
+app.use('/createBook', createBook_1.default);
 app.post('/register', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let { user, pwd } = req.body;
     try {
@@ -60,7 +62,6 @@ app.post('/register', (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 }));
 app.get('/', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.session);
     res.status(200).json({ "message": "Ok" });
 }));
 app.listen(9999, () => {
