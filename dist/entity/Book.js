@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Book = void 0;
-const buffer_1 = require("buffer");
 const typeorm_1 = require("typeorm");
 let Book = class Book extends typeorm_1.BaseEntity {
 };
@@ -27,7 +26,7 @@ __decorate([
     __metadata("design:type", String)
 ], Book.prototype, "category_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", Date)
 ], Book.prototype, "publication_date", void 0);
 __decorate([
@@ -36,7 +35,7 @@ __decorate([
 ], Book.prototype, "copies_owned", void 0);
 __decorate([
     (0, typeorm_1.Column)("blob"),
-    __metadata("design:type", buffer_1.Blob)
+    __metadata("design:type", Object)
 ], Book.prototype, "graphic", void 0);
 Book = __decorate([
     (0, typeorm_1.Entity)()

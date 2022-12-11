@@ -1,11 +1,8 @@
 import express from "express";
-import { Request, Response } from "express";
 import corsOptions from "./config/corsOptions";
 import { AppDataSource } from "./data-source";
-import { User } from "./entity/User";
 import cors from "cors";
 import credentials from "./middleware/credentials";
-import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
 import session = require("express-session");
 
@@ -36,10 +33,12 @@ app.use(cookieParser());
 import login from "./routes/login";
 import logout from "./routes/logout";
 import auth from "./routes/auth";
+import upload from "./routes/upload";
 
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/auth', auth);
+app.use('/upload', upload);
 
 
 app.listen(9999, () => {

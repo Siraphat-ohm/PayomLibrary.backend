@@ -13,13 +13,13 @@ export class Book extends BaseEntity{
     @Column()
     category_id: string 
 
-    @Column()
+    @Column({nullable: true})
     publication_date: Date
 
     @Column()
     copies_owned: string
 
     @Column("blob")
-    graphic: Blob 
+    graphic: Object 
 
 }
