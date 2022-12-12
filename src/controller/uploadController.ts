@@ -5,32 +5,24 @@ import fs from 'fs';
 
 const handleUpload = async(req:Request, res:Response, next:Function) => {
 
-    let obj = {
-        id : req.body.id,
-        title : req.body.title,
-        category_id : req.body.category_id,
-        publication_date : req.body.publication_date,
-        copies_own : req.body.copies_own,
-        graphic : req.files || req.file
-    }
-
-    const file = fs.readFileSync("./uploads/" + req.file.filename);
+    const { title, category_id, copies_owned, publication_year, edition } = req.body;
     
-     try {
-         await Book.insert({
-            title: req.body.title,
-            category_id : req.body.category_id,
-            publication_date : req.body.publication_date,
-            copies_owned : req.body.copies_owned,
+    const file = fs.readFileSync("./uploads/" + req.file.filename);
+    try {
+        await Book.insert({
+            title : title,
+            category_id : category_id,
+            copies_owned : copies_owned,
+            publication_year : publication_year,
+            edition : edition,
             graphic : file
-         });
-         res.send(req.file.filename);
-     } catch (error) {
-         console.error(error);
-         res.sendStatus(400);
-         next(error);
-     }
-
+        })
+        fs.unlinkSync("./uploads/" + req.file.filename)
+        res.json({"message": "create success"});
+    } catch (error) {
+        console.error(error.message);
+        res.sendStatus(400);
+    }
 }
 
 export default { handleUpload }

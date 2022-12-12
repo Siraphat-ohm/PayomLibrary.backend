@@ -26,9 +26,13 @@ __decorate([
     __metadata("design:type", String)
 ], Book.prototype, "category_id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", Date)
-], Book.prototype, "publication_date", void 0);
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Book.prototype, "edition", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Book.prototype, "publication_year", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)

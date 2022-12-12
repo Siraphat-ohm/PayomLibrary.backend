@@ -34,11 +34,13 @@ import login from "./routes/login";
 import logout from "./routes/logout";
 import auth from "./routes/auth";
 import upload from "./routes/upload";
+import books from "./routes/api/book";
 
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/auth', auth);
 app.use('/upload', upload);
+app.use('/books', books);
 
 
 app.listen(9999, () => {

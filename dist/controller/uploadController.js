@@ -15,29 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Book_1 = require("../entity/Book");
 const fs_1 = __importDefault(require("fs"));
 const handleUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let obj = {
-        id: req.body.id,
-        title: req.body.title,
-        category_id: req.body.category_id,
-        publication_date: req.body.publication_date,
-        copies_own: req.body.copies_own,
-        graphic: req.files || req.file
-    };
+    const { title, category_id, copies_owned, publication_year, edition } = req.body;
     const file = fs_1.default.readFileSync("./uploads/" + req.file.filename);
     try {
         yield Book_1.Book.insert({
-            title: req.body.title,
-            category_id: req.body.category_id,
-            publication_date: req.body.publication_date,
-            copies_owned: req.body.copies_owned,
+            title: title,
+            category_id: category_id,
+            copies_owned: copies_owned,
+            publication_year: publication_year,
+            edition: edition,
             graphic: file
         });
-        res.send(req.file.filename);
+        fs_1.default.unlinkSync("./uploads/" + req.file.filename);
+        res.json({ "message": "create success" });
     }
     catch (error) {
-        console.error(error);
+        console.error(error.message);
         res.sendStatus(400);
-        next(error);
     }
 });
 exports.default = { handleUpload };

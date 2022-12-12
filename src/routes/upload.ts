@@ -5,10 +5,10 @@ import { Book } from "../entity/Book";
 
 const storage = multer.diskStorage({
     destination : function( req: Request, file:any, cb:any) {
-        cb(null, './uploads/')
+        cb(null, './uploads/');
     }, 
     filename:function(req:Request, file:any, cb:any) {
-        cb(null, file.originalname)
+        cb(null, file.originalname);
     }
 });
 
@@ -16,14 +16,6 @@ const upload = multer({storage: storage,})
 
 const router = express.Router();
 
-//router.post('/', upload.single('graphic'),  uploadController.handleUpload);
-router.get('/', async(req:Request, res:Response, next:Function)=>{
-    let data = await Book.findOne({ where:{
-        id:1
-    }})
-    console.log(data.graphic);
-    res.send(data);
-    
-})
+router.post('/', upload.single('graphic'),  uploadController.handleUpload);
 
 export = router;
