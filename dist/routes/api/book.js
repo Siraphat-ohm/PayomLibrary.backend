@@ -6,5 +6,6 @@ const express_1 = __importDefault(require("express"));
 const bookController_1 = __importDefault(require("../../controller/bookController"));
 const router = express_1.default.Router();
 router.get('/', bookController_1.default.getAllBooks);
+router.route('/:page').get(bookController_1.default.paginationBooks);
 module.exports = router;
 //# sourceMappingURL=book.js.map

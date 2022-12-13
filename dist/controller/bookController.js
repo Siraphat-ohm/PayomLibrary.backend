@@ -21,5 +21,27 @@ const getAllBooks = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         res.sendStatus(400);
     }
 });
-exports.default = { getAllBooks };
+const paginationBooks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const page = req.params.page || 1;
+    const size = 10;
+    const calSkip = (page, size) => {
+        return (page - 1) * size;
+    };
+    const calPage = (count, size) => {
+        return Math.ceil(count / size);
+    };
+    try {
+        let data = yield Book_1.Book.find({
+            select: ['id'],
+            skip: (calSkip(Number(page), size)),
+            take: size
+        });
+        res.json(data);
+    }
+    catch (error) {
+        console.log(error);
+        res.sendStatus(400);
+    }
+});
+exports.default = { getAllBooks, paginationBooks };
 //# sourceMappingURL=bookController.js.map
