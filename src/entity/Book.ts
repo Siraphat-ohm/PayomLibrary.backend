@@ -1,4 +1,3 @@
-import { Blob } from "buffer"
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm"
 
 @Entity()
@@ -22,6 +21,19 @@ export class Book extends BaseEntity{
     @Column()
     copies_owned: string
 
-    @Column("blob")
-    graphic: Object 
+    @Column()
+    graphic: string
+
+    @Column()
+    language: string
+
+    @Column()
+    page:number
+
+    @Column()
+    ISBN: string
+
+    @Column("text")
+    detail: string
+
 }

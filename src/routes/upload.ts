@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import uploadController from "../controller/uploadController";
 import multer from "multer";
-import { Book } from "../entity/Book";
 
 const storage = multer.diskStorage({
     destination : function( req: Request, file:any, cb:any) {

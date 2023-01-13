@@ -16,15 +16,11 @@ let Author = class Author extends typeorm_1.BaseEntity {
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)("increment"),
     __metadata("design:type", Number)
-], Author.prototype, "book_id", void 0);
+], Author.prototype, "author_id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Author.prototype, "first_name", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Author.prototype, "last_name", void 0);
+], Author.prototype, "name", void 0);
 Author = __decorate([
     (0, typeorm_1.Entity)()
 ], Author);

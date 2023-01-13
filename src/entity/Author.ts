@@ -4,12 +4,9 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm"
 export class Author extends BaseEntity{
 
     @PrimaryGeneratedColumn("increment")
-    book_id: number
+    author_id: number
 
     @Column()
-    first_name: string
-
-    @Column()
-    last_name: string
+    name: string
 
 }

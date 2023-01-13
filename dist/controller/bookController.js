@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Book_1 = require("../entity/Book");
+const fs = require('fs');
 const getAllBooks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let data = yield Book_1.Book.find();
@@ -22,19 +23,22 @@ const getAllBooks = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 const paginationBooks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const page = req.params.page || 1;
+    let page = req.params.page || 1;
     const size = 10;
     const calSkip = (page, size) => {
         return (page - 1) * size;
     };
-    const calPage = (count, size) => {
-        return Math.ceil(count / size);
-    };
     try {
+        let skip = calSkip(Number(page), size);
         let data = yield Book_1.Book.find({
-            select: ['id'],
             skip: (calSkip(Number(page), size)),
             take: size
+        });
+        const filename = fs.readdirSync('./uploads/');
+        data.forEach((element, index) => {
+            if (element.graphic == filename[index]) {
+                data[index].graphic = fs.readFileSync(`./uploads/${filename[index]}`, { encoding: 'base64' });
+            }
         });
         res.json(data);
     }
@@ -43,5 +47,18 @@ const paginationBooks = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         res.sendStatus(400);
     }
 });
-exports.default = { getAllBooks, paginationBooks };
+const getNumberOfPages = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const calPage = (count, size) => {
+        return Math.ceil(count / size);
+    };
+    try {
+        let count = yield Book_1.Book.count({ select: ['id'] });
+        res.status(200).json({ "pages": calPage(Number(count), 10) });
+    }
+    catch (error) {
+        console.log(error);
+        res.sendStatus(400);
+    }
+});
+exports.default = { getAllBooks, paginationBooks, getNumberOfPages };
 //# sourceMappingURL=bookController.js.map

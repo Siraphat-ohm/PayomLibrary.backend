@@ -38,9 +38,25 @@ __decorate([
     __metadata("design:type", String)
 ], Book.prototype, "copies_owned", void 0);
 __decorate([
-    (0, typeorm_1.Column)("blob"),
-    __metadata("design:type", Object)
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], Book.prototype, "graphic", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Book.prototype, "language", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Book.prototype, "page", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Book.prototype, "ISBN", void 0);
+__decorate([
+    (0, typeorm_1.Column)("text"),
+    __metadata("design:type", String)
+], Book.prototype, "detail", void 0);
 Book = __decorate([
     (0, typeorm_1.Entity)()
 ], Book);
