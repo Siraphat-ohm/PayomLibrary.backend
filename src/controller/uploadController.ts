@@ -35,8 +35,8 @@ const handleUpload = async(req:Request, res:Response, next:Function) => {
         const book_id = await Book.find({select: {id:true}, where:{title: title}})
 
         await Book_author.insert({
-            book_id:Number(book_id),
-            author_id:Number(author_id)
+            book_id:Number(book_id[0].id),
+            author_id:Number(author_id[0].author_id)
         })
         
 

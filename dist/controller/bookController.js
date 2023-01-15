@@ -29,16 +29,13 @@ const paginationBooks = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         return (page - 1) * size;
     };
     try {
-        let skip = calSkip(Number(page), size);
         let data = yield Book_1.Book.find({
             skip: (calSkip(Number(page), size)),
             take: size
         });
         const filename = fs.readdirSync('./uploads/');
         data.forEach((element, index) => {
-            if (element.graphic == filename[index]) {
-                data[index].graphic = fs.readFileSync(`./uploads/${filename[index]}`, { encoding: 'base64' });
-            }
+            data[index].graphic = fs.readFileSync(`./uploads/${filename.find(item => data[index].graphic == item)}`, { encoding: 'base64' });
         });
         res.json(data);
     }

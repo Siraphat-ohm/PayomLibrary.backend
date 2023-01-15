@@ -5,6 +5,9 @@ import cors from "cors";
 import credentials from "./middleware/credentials";
 import cookieParser from "cookie-parser";
 import session = require("express-session");
+import * as http from "http";
+import * as socketio from "socket.io";
+
 
 AppDataSource
     .initialize()
@@ -35,14 +38,36 @@ import logout from "./routes/logout";
 import auth from "./routes/auth";
 import upload from "./routes/upload";
 import books from "./routes/api/book";
+import register from "./routes/register";
 
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/auth', auth);
 app.use('/upload', upload);
 app.use('/books', books);
+app.use('/register', register);
 
+const server = http.createServer(app)
+const io = new socketio.Server(server, {
+    cors: {
+        origin : "http://127.0.0.1:5173",
+        methods : ["GET", "POST"]
+    }
+})
 
-app.listen(9999, () => {
-    console.log("server start port : 9999");
+io.on("connection", (socket) => {
+    console.log(socket.id);
+
+    socket.on("disconnect", () => {
+        console.log("user disconnected")
+    })
+
+    socket.on("order", (arg) => {
+        console.log(arg);
+        
+    })
+})
+
+server.listen(9999, ()=> {
+    console.log('server start on port : 9999');
 })

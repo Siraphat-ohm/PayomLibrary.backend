@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Any } from "typeorm";
 import { Book } from "../entity/Book";
 const fs = require('fs')
 
@@ -25,7 +24,6 @@ const paginationBooks = async(req:Request, res:Response, next:Function) => {
     }
 
     try {
-        let skip = calSkip(Number(page), size)
         let data = await Book.find(
             {
                 skip:(calSkip(Number(page),size)),
@@ -36,9 +34,7 @@ const paginationBooks = async(req:Request, res:Response, next:Function) => {
         const filename = fs.readdirSync('./uploads/')
         
         data.forEach((element, index) => {
-            if (element.graphic == filename[index]) {
-                data[index].graphic = fs.readFileSync(`./uploads/${filename[index]}`, { encoding : 'base64' })
-            }
+                data[index].graphic = fs.readFileSync(`./uploads/${filename.find(item => data[index].graphic == item)}`, { encoding : 'base64' })
         });
 
         res.json(data);

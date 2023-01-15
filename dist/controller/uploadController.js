@@ -37,8 +37,8 @@ const handleUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const author_id = yield Author_1.Author.find({ select: { author_id: true }, where: { name: author } });
         const book_id = yield Book_1.Book.find({ select: { id: true }, where: { title: title } });
         yield Book_author_1.Book_author.insert({
-            book_id: Number(book_id),
-            author_id: Number(author_id)
+            book_id: Number(book_id[0].id),
+            author_id: Number(author_id[0].author_id)
         });
         res.sendStatus(200);
     }
