@@ -10,6 +10,9 @@ export class User extends BaseEntity{
     userName: string
 
     @Column()
+    role: number
+
+    @Column()
     passWord: string 
 
 }
