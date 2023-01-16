@@ -9,7 +9,6 @@ const handleLogin = async (req:Request, res:Response, next:Function) => {
 
     try {
         let foundUser = await User.find( { where: { userName:req.body.user }})
-        
         const userInput : string = foundUser[0].userName
         const pwdInput : string = foundUser[0].passWord
         const role : number = foundUser[0].role
@@ -21,7 +20,9 @@ const handleLogin = async (req:Request, res:Response, next:Function) => {
             const accessToken = TKM.generateAcessToken()
             const refreshToken = TKM.generateRefreshToken()
 
-            res.json({ accessToken: accessToken, refreshToken: refreshToken, auth: true})
+            await User.update({ userName : user }, { refreshToken : refreshToken })
+
+            res.json({ accessToken: accessToken, refreshToken: refreshToken, auth: true })
         }
 
     } catch (error) {
