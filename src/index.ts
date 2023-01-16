@@ -4,7 +4,6 @@ import { AppDataSource } from "./data-source";
 import cors from "cors";
 import credentials from "./middleware/credentials";
 import cookieParser from "cookie-parser";
-import session = require("express-session");
 import * as http from "http";
 import * as socketio from "socket.io";
 
@@ -20,13 +19,6 @@ AppDataSource
 
 const app = express();
 
-//config
-app.use(session({
-    secret: "test",
-    saveUninitialized: true,
-    cookie: {maxAge: 1000 * 60 * 60 * 24},
-    resave: false
-}))
 app.use(express.json());
 app.use(credentials);
 app.use(cors(corsOptions));
@@ -38,13 +30,18 @@ import logout from "./routes/logout";
 import upload from "./routes/upload";
 import books from "./routes/api/book";
 import register from "./routes/register";
+import refresh from "./routes/auth";
+import verifyRefreshToken from "./middleware/verityRefreshToken";
+import verifyAcessToken from "./middleware/verifyAcessToken";
 
 app.use('/login', login);
 
-app.use('/logout', logout);
+app.use('/auth/refresh', verifyRefreshToken, refresh)
+app.use(verifyAcessToken);
 app.use('/upload', upload);
 app.use('/books', books);
 app.use('/register', register);
+app.use('/logout', logout);
 
 const server = http.createServer(app)
 const io = new socketio.Server(server, {
@@ -57,7 +54,7 @@ const io = new socketio.Server(server, {
 io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
-        console.log("user disconnected")
+        //console.log("user disconnected")
     })
 
     socket.on("order", (arg) => {
