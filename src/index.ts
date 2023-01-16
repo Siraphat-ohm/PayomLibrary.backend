@@ -35,14 +35,13 @@ app.use(cookieParser());
 //routes
 import login from "./routes/login";
 import logout from "./routes/logout";
-import auth from "./routes/auth";
 import upload from "./routes/upload";
 import books from "./routes/api/book";
 import register from "./routes/register";
 
 app.use('/login', login);
+
 app.use('/logout', logout);
-app.use('/auth', auth);
 app.use('/upload', upload);
 app.use('/books', books);
 app.use('/register', register);
@@ -56,7 +55,6 @@ const io = new socketio.Server(server, {
 })
 
 io.on("connection", (socket) => {
-    console.log(socket.id);
 
     socket.on("disconnect", () => {
         console.log("user disconnected")

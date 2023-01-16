@@ -9,7 +9,7 @@ export class User extends BaseEntity{
     @Column()
     userName: string
 
-    @Column()
+    @Column({ default: 0 })
     role: number
 
     @Column()

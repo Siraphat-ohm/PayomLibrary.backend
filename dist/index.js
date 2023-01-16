@@ -54,13 +54,11 @@ app.use((0, cookie_parser_1.default)());
 //routes
 const login_1 = __importDefault(require("./routes/login"));
 const logout_1 = __importDefault(require("./routes/logout"));
-const auth_1 = __importDefault(require("./routes/auth"));
 const upload_1 = __importDefault(require("./routes/upload"));
 const book_1 = __importDefault(require("./routes/api/book"));
 const register_1 = __importDefault(require("./routes/register"));
 app.use('/login', login_1.default);
 app.use('/logout', logout_1.default);
-app.use('/auth', auth_1.default);
 app.use('/upload', upload_1.default);
 app.use('/books', book_1.default);
 app.use('/register', register_1.default);
@@ -72,7 +70,6 @@ const io = new socketio.Server(server, {
     }
 });
 io.on("connection", (socket) => {
-    console.log(socket.id);
     socket.on("disconnect", () => {
         console.log("user disconnected");
     });
