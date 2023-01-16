@@ -13,25 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../entity/User");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const roles_json_1 = __importDefault(require("../config/roles.json"));
+const tokenManager_1 = require("../token/tokenManager");
 const bcrypt = require('bcrypt');
 const handleLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let { user, pwd } = req.body;
     try {
-        let foundUser = yield User_1.User.find({
-            where: { userName: req.body.user }
-        });
+        let foundUser = yield User_1.User.find({ where: { userName: req.body.user } });
         const userInput = foundUser[0].userName;
         const pwdInput = foundUser[0].passWord;
         const role = roles_json_1.default[foundUser[0].role];
         const payload = { user: userInput, role: role };
+        const acessToken = (0, tokenManager_1.generateAcessToken)(payload);
+        const refreshToken = (0, tokenManager_1.generateAcessToken)(payload);
         if (userInput == user && (yield bcrypt.compareSync(pwd, pwdInput))) {
-            //req.session.userid = foundUser[0].id;
-            //req.session.username = foundUser[0].userName;
-            //res.status(200).json({"message":"login success."});
-            const accessToken = jsonwebtoken_1.default.sign(payload, process.env.SECRET_KEY_ACESS);
-            res.json({ accessToken: accessToken });
+            res.json({ acessToken: acessToken, refreshToken: refreshToken, auth: true });
         }
     }
     catch (error) {
