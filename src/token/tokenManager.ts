@@ -8,28 +8,18 @@ class TokenManager {
     protected accessToken : string;
     protected refreshToken : string 
 
-    protected invalidRefreshToken : Array<string>  = []
-    
     constructor(payload : payload){
         this.payload = payload;
     }
 
     generateAcessToken(){
-        this.accessToken = jwt.sign(this.payload, process.env.SECRET_KEY_ACESS);
+        this.accessToken = jwt.sign(this.payload, process.env.SECRET_KEY_ACESS, { expiresIn: "3m" });
         return this.accessToken;
     }
 
     generateRefreshToken(){
-        this.refreshToken = jwt.sign(this.payload, process.env.SECRET_KEY_REFRESH);
+        this.refreshToken = jwt.sign(this.payload, process.env.SECRET_KEY_REFRESH, { expiresIn : "1d" });
         return this.refreshToken
-    }
-
-    validRefreshToken(refreshToken : string){
-        return this.invalidRefreshToken.includes(refreshToken)
-    }
-
-    invalidToken(refreshToken){
-        this.invalidRefreshToken.push(refreshToken)
     }
 
 }
