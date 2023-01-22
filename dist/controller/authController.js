@@ -13,12 +13,10 @@ const User_1 = require("../entity/User");
 const handleAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const cookie = req.cookies;
     if (JSON.stringify(cookie) == '{}')
-        return res.sendStatus(201);
+        return res.json({ "isLogin": false });
     try {
         const foundRefresh = yield User_1.User.find({ where: { refreshToken: cookie.jwt } });
-        if (foundRefresh.length != 0)
-            return res.sendStatus(200);
-        res.sendStatus(201);
+        res.json({ "isLogin": true, "user": foundRefresh[0].userName });
     }
     catch (err) {
         console.log(err);
