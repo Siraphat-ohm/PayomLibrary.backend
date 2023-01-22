@@ -6,9 +6,15 @@ import { payload } from "../types/types";
 
 const handleLogin = async (req:Request, res:Response, next:Function) => {
     let { user, pwd } = req.body;
+    
+
+    if (!user || !pwd) return res.json({ 'message' : "Username and password are required."} ).status(400)
 
     try {
         let foundUser = await User.find( { where: { userName:req.body.user }})
+
+        if(!foundUser) return res.status(401).json( {"message" : "not found user in database."})
+
         const userInput : string = foundUser[0].userName
         const pwdInput : string = foundUser[0].passWord
         const role : number = foundUser[0].role
@@ -22,7 +28,10 @@ const handleLogin = async (req:Request, res:Response, next:Function) => {
 
             await User.update({ userName : user }, { refreshToken : refreshToken })
 
-            res.json({ accessToken: accessToken, refreshToken: refreshToken, auth: true })
+            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: "none", secure : true, maxAge: 24 * 60 * 60 * 1000 })
+            res.json({ accessToken : accessToken, auth:true })
+        } else {
+            res.json( { "massage" : "user or password invalid" }).status(401);
         }
 
     } catch (error) {
