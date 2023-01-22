@@ -30,18 +30,19 @@ import logout from "./routes/logout";
 import upload from "./routes/upload";
 import books from "./routes/api/book";
 import register from "./routes/register";
-import refresh from "./routes/auth";
-import verifyRefreshToken from "./middleware/verityRefreshToken";
-import verifyAcessToken from "./middleware/verifyAcessToken";
+import verifyAccessToken from "./middleware/verifyAccessToken";
+import refresh from "./routes/refresh";
+import auth from "./routes/auth";
 
+app.use('/register', register);
 app.use('/login', login);
+app.use('/auth', auth);
+app.use('/refresh', refresh)
+app.use('/logout', logout);
 
-app.use('/auth/refresh', verifyRefreshToken, refresh)
-app.use(verifyAcessToken);
+app.use(verifyAccessToken)
 app.use('/upload', upload);
 app.use('/books', books);
-app.use('/register', register);
-app.use('/logout', logout);
 
 const server = http.createServer(app)
 const io = new socketio.Server(server, {
@@ -63,6 +64,6 @@ io.on("connection", (socket) => {
     })
 })
 
-server.listen(9999, ()=> {
-    console.log('server start on port : 9999');
+server.listen(4662, ()=> {
+    console.log('server start on port : 4662');
 })
