@@ -9,10 +9,13 @@ export class User extends BaseEntity{
     @Column()
     userName: string
 
-    @Column({ default: 0 })
+    @Column({ default: 1312 })
     role: number
 
     @Column()
     passWord: string 
+
+    @Column({ default : ""})
+    refreshToken : string
 
 }
