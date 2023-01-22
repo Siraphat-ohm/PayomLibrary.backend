@@ -1,9 +1,8 @@
-
 import express from "express";
-import refreshController from "../controller/refreshController";
+import authController from "../controller/authController";
 
 const router = express.Router();
 
-router.post('/', refreshController.handleRefresh);
+router.get('/', authController.handleAuth);
 
 export = router;
