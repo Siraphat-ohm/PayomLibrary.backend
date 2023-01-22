@@ -13,6 +13,11 @@ const User_1 = require("../entity/User");
 const bcrypt = require('bcrypt');
 const handleRegister = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let { user, pwd } = req.body;
+    if (!user || !pwd)
+        return res.status(400).json({ "message": "Username and password are required" });
+    const duplicate = User_1.User.find({ where: { userName: user } });
+    if (duplicate)
+        return res.sendStatus(409);
     try {
         let pwdHash = bcrypt.hashSync(pwd, 10);
         yield User_1.User.insert({ userName: user, passWord: pwdHash });

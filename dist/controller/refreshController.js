@@ -8,21 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_1 = require("../entity/User");
-const handleAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const cookie = req.cookies;
-    if (JSON.stringify(cookie) == '{}')
-        return res.sendStatus(201);
+const tokenManager_1 = __importDefault(require("../token/tokenManager"));
+const handleRefresh = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const foundRefresh = yield User_1.User.find({ where: { refreshToken: cookie.jwt } });
-        if (foundRefresh.length != 0)
-            return res.sendStatus(200);
-        res.sendStatus(201);
+        const payload = { user: req.user, role: req.role };
+        const TKM = new tokenManager_1.default(payload);
+        const accessToken = TKM.generateAcessToken();
+        const refreshToken = TKM.generateRefreshToken();
+        res.json({ accessToken: accessToken, refreshToken: refreshToken });
     }
-    catch (err) {
-        console.log(err);
+    catch (error) {
+        res.sendStatus(404);
     }
 });
-exports.default = { handleAuth };
-//# sourceMappingURL=authController.js.map
+exports.default = { handleRefresh };
+//# sourceMappingURL=refreshController.js.map

@@ -28,7 +28,6 @@ const data_source_1 = require("./data-source");
 const cors_1 = __importDefault(require("cors"));
 const credentials_1 = __importDefault(require("./middleware/credentials"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const session = require("express-session");
 const http = __importStar(require("http"));
 const socketio = __importStar(require("socket.io"));
 data_source_1.AppDataSource
@@ -40,13 +39,6 @@ data_source_1.AppDataSource
     console.log("Error initalize", err);
 });
 const app = (0, express_1.default)();
-//config
-app.use(session({
-    secret: "test",
-    saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 },
-    resave: false
-}));
 app.use(express_1.default.json());
 app.use(credentials_1.default);
 app.use((0, cors_1.default)(corsOptions_1.default));
@@ -57,11 +49,17 @@ const logout_1 = __importDefault(require("./routes/logout"));
 const upload_1 = __importDefault(require("./routes/upload"));
 const book_1 = __importDefault(require("./routes/api/book"));
 const register_1 = __importDefault(require("./routes/register"));
+const verifyAccessToken_1 = __importDefault(require("./middleware/verifyAccessToken"));
+const refresh_1 = __importDefault(require("./routes/refresh"));
+const auth_1 = __importDefault(require("./routes/auth"));
+app.use('/register', register_1.default);
 app.use('/login', login_1.default);
+app.use('/auth', auth_1.default);
+app.use('/refresh', refresh_1.default);
 app.use('/logout', logout_1.default);
+app.use(verifyAccessToken_1.default);
 app.use('/upload', upload_1.default);
 app.use('/books', book_1.default);
-app.use('/register', register_1.default);
 const server = http.createServer(app);
 const io = new socketio.Server(server, {
     cors: {
@@ -71,13 +69,13 @@ const io = new socketio.Server(server, {
 });
 io.on("connection", (socket) => {
     socket.on("disconnect", () => {
-        console.log("user disconnected");
+        //console.log("user disconnected")
     });
     socket.on("order", (arg) => {
         console.log(arg);
     });
 });
-server.listen(9999, () => {
-    console.log('server start on port : 9999');
+server.listen(4662, () => {
+    console.log('server start on port : 4662');
 });
 //# sourceMappingURL=index.js.map

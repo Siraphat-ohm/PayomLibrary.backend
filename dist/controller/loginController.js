@@ -13,21 +13,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../entity/User");
-const roles_json_1 = __importDefault(require("../config/roles.json"));
-const tokenManager_1 = require("../token/tokenManager");
 const bcrypt = require('bcrypt');
+const tokenManager_1 = __importDefault(require("../token/tokenManager"));
 const handleLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let { user, pwd } = req.body;
+    if (!user || !pwd)
+        return res.json({ 'message': "Username and password are required." }).status(400);
     try {
         let foundUser = yield User_1.User.find({ where: { userName: req.body.user } });
+        if (!foundUser)
+            return res.status(401).json({ "message": "not found user in database." });
         const userInput = foundUser[0].userName;
         const pwdInput = foundUser[0].passWord;
-        const role = roles_json_1.default[foundUser[0].role];
+        const role = foundUser[0].role;
         const payload = { user: userInput, role: role };
-        const acessToken = (0, tokenManager_1.generateAcessToken)(payload);
-        const refreshToken = (0, tokenManager_1.generateAcessToken)(payload);
+        const TKM = new tokenManager_1.default(payload);
         if (userInput == user && (yield bcrypt.compareSync(pwd, pwdInput))) {
-            res.json({ acessToken: acessToken, refreshToken: refreshToken, auth: true });
+            const accessToken = TKM.generateAcessToken();
+            const refreshToken = TKM.generateRefreshToken();
+            yield User_1.User.update({ userName: user }, { refreshToken: refreshToken });
+            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 });
+            res.json({ accessToken: accessToken, auth: true });
+        }
+        else {
+            res.json({ "massage": "user or password invalid" }).status(401);
         }
     }
     catch (error) {
