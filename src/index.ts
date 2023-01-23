@@ -27,12 +27,12 @@ app.use(cookieParser());
 //routes
 import login from "./routes/login";
 import logout from "./routes/logout";
-import upload from "./routes/upload";
-import books from "./routes/api/book";
+import upload from "./routes/client/upload";
+import books from "./routes/admin/api/book";
 import register from "./routes/register";
 import verifyAccessToken from "./middleware/verifyAccessToken";
 import refresh from "./routes/refresh";
-import auth from "./routes/auth";
+import auth from "./routes/admin/auth";
 
 app.use('/register', register);
 app.use('/login', login);

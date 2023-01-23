@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import uploadController from "../controller/uploadController";
+import uploadController from "../../controller/uploadController";
 import multer from "multer";
 
 const storage = multer.diskStorage({

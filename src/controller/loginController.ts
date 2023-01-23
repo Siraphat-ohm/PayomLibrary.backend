@@ -13,7 +13,7 @@ const handleLogin = async (req:Request, res:Response, next:Function) => {
     try {
         let foundUser = await User.find( { where: { userName:req.body.user }})
 
-        if(!foundUser) return res.status(401).json( {"message" : "not found user in database."})
+        if(foundUser.length == 0) return res.status(401).json( {"message" : "not found user"})
 
         const userInput : string = foundUser[0].userName
         const pwdInput : string = foundUser[0].passWord
@@ -29,7 +29,7 @@ const handleLogin = async (req:Request, res:Response, next:Function) => {
             await User.update({ userName : user }, { refreshToken : refreshToken })
 
             res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: "none", secure : true, maxAge: 24 * 60 * 60 * 1000 })
-            res.json({ accessToken : accessToken, auth:true })
+            res.json({ accessToken : accessToken })
         } else {
             res.json( { "massage" : "user or password invalid" }).status(401);
         }
