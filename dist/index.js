@@ -69,11 +69,10 @@ const io = new socketio.Server(server, {
     }
 });
 io.on("connection", (socket) => {
-    socket.on("disconnect", () => {
-        //console.log("user disconnected")
-    });
+    socket.broadcast.emit('hello', 'ayyyy');
     socket.on("order", (arg) => {
-        console.log(arg);
+        let order = arg;
+        socket.broadcast.emit("send-order", order);
     });
 });
 server.listen(4662, () => {
