@@ -15,12 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../entity/User");
 const bcrypt = require('bcrypt');
 const tokenManager_1 = __importDefault(require("../token/tokenManager"));
-const handleLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const roles_json_1 = __importDefault(require("../config/roles.json"));
+const handleAdminLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     let { user, pwd } = req.body;
     if (!user || !pwd)
         return res.json({ 'message': "Username and password are required." }).status(400);
     try {
-        let foundUser = yield User_1.User.find({ where: { userName: req.body.user } });
+        let foundUser = yield User_1.User.find({ where: { userName: req.body.user, role: roles_json_1.default.libralian } });
         if (foundUser.length == 0)
             return res.status(401).json({ "message": "not found user" });
         const userInput = foundUser[0].userName;
@@ -33,7 +34,7 @@ const handleLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             const refreshToken = TKM.generateRefreshToken();
             yield User_1.User.update({ userName: user }, { refreshToken: refreshToken });
             res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: "none", secure: true, maxAge: 24 * 60 * 60 * 1000 });
-            res.json({ accessToken: accessToken, role: role });
+            res.json({ accessToken: accessToken });
         }
         else {
             res.json({ "massage": "user or password invalid" }).status(401);
@@ -43,5 +44,5 @@ const handleLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         next(error);
     }
 });
-exports.default = { handleLogin };
-//# sourceMappingURL=loginController.js.map
+exports.default = { handleAdminLogin };
+//# sourceMappingURL=loginAdminController.js.map

@@ -6,7 +6,6 @@ import { payload } from "../types/types";
 
 const handleLogin = async (req:Request, res:Response, next:Function) => {
     let { user, pwd } = req.body;
-    
 
     if (!user || !pwd) return res.json({ 'message' : "Username and password are required."} ).status(400)
 
@@ -29,7 +28,7 @@ const handleLogin = async (req:Request, res:Response, next:Function) => {
             await User.update({ userName : user }, { refreshToken : refreshToken })
 
             res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: "none", secure : true, maxAge: 24 * 60 * 60 * 1000 })
-            res.json({ accessToken : accessToken })
+            res.json({ accessToken : accessToken, role:role })
         } else {
             res.json( { "massage" : "user or password invalid" }).status(401);
         }
