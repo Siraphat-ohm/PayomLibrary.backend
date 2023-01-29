@@ -33,6 +33,7 @@ import register from "./routes/admin/register";
 import verifyAccessToken from "./middleware/verifyAccessToken";
 import refresh from "./routes/refresh";
 import auth from "./routes/auth";
+import { Order } from "./entity/Order";
 
 app.use('/auth', auth);
 app.use('/refresh', refresh)
@@ -55,9 +56,15 @@ const io = new socketio.Server(server, {
 
 io.on("connection", (socket) => {
     socket.broadcast.emit('hello', 'ayyyy');
-    socket.on("order", (arg) => {
-        let order = arg
-        socket.broadcast.emit("send-order", order)
+    socket.on("order", async(arg) => {
+        let orders = arg
+        console.log(orders);
+        //for(let order of orders){
+            //await Order.insert({book_id:order.id, amount:order.amount, user_id:order.userId})
+        //}
+        const orderQuery = await Order.find({ relations: { book: true }})
+        console.log(orderQuery);
+        
     })
 })
 

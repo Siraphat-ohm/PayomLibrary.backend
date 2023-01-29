@@ -9,20 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Book_author = void 0;
+exports.Order = void 0;
 const typeorm_1 = require("typeorm");
-let Book_author = class Book_author extends typeorm_1.BaseEntity {
+let Order = class Order extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.PrimaryColumn)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)("increment"),
     __metadata("design:type", Number)
-], Book_author.prototype, "book_id", void 0);
+], Order.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], Book_author.prototype, "author_id", void 0);
-Book_author = __decorate([
+], Order.prototype, "book_id", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Order.prototype, "amount", void 0);
+Order = __decorate([
     (0, typeorm_1.Entity)()
-], Book_author);
-exports.Book_author = Book_author;
-//# sourceMappingURL=Book_author.js.map
+], Order);
+exports.Order = Order;
+//# sourceMappingURL=Order.js.map

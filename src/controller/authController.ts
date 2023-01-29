@@ -7,7 +7,7 @@ const handleAuth = async(req: Request, res:Response, next:Function) => {
     try {
         const foundRefresh = await User.find( { where : { refreshToken : cookie.jwt }})
         
-        res.json({"isLogin" : true, "user":foundRefresh[0].userName  });
+        res.json({"isLogin" : true, "user":foundRefresh[0].userName, "role":foundRefresh[0].role, "id":foundRefresh[0].id });
         
     } catch(err) {
         console.log(err);

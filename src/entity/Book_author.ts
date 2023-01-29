@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm"
+import { Entity, Column, BaseEntity, PrimaryColumn } from "typeorm"
 
 @Entity()
 export class Book_author extends BaseEntity{
 
-    @PrimaryGeneratedColumn("increment")
+    @PrimaryColumn()
     book_id: number
 
     @Column()

@@ -8,6 +8,7 @@ import { Member_status } from "./entity/Member_status"
 import { Reservation } from "./entity/Reservation"
 import { Reservation_status } from "./entity/Reservation_status"
 import { User } from "./entity/User"
+import { Order } from "./entity/Order"
 
 import dotenv from "dotenv"
 dotenv.config()
@@ -21,7 +22,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB,
     synchronize: true,
     logging: false,
-    entities: [User, Book, Book_author, Author, Category, Loan, Member_status, Reservation, Reservation_status],
+    entities: [User, Book, Book_author, Author, Category, Loan, Member_status, Reservation, Reservation_status, Order],
     migrations: [],
     subscribers: [],
 })

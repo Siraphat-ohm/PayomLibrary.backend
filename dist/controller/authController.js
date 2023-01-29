@@ -16,7 +16,7 @@ const handleAuth = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         return res.json({ "isLogin": false });
     try {
         const foundRefresh = yield User_1.User.find({ where: { refreshToken: cookie.jwt } });
-        res.json({ "isLogin": true, "user": foundRefresh[0].userName });
+        res.json({ "isLogin": true, "user": foundRefresh[0].userName, "role": foundRefresh[0].role, "id": foundRefresh[0].id });
     }
     catch (err) {
         console.log(err);

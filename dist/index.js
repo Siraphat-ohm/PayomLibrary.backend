@@ -18,6 +18,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -52,6 +61,7 @@ const register_1 = __importDefault(require("./routes/admin/register"));
 const verifyAccessToken_1 = __importDefault(require("./middleware/verifyAccessToken"));
 const refresh_1 = __importDefault(require("./routes/refresh"));
 const auth_1 = __importDefault(require("./routes/auth"));
+const Order_1 = require("./entity/Order");
 app.use('/auth', auth_1.default);
 app.use('/refresh', refresh_1.default);
 app.use('/logout', logout_1.default);
@@ -70,10 +80,15 @@ const io = new socketio.Server(server, {
 });
 io.on("connection", (socket) => {
     socket.broadcast.emit('hello', 'ayyyy');
-    socket.on("order", (arg) => {
-        let order = arg;
-        socket.broadcast.emit("send-order", order);
-    });
+    socket.on("order", (arg) => __awaiter(void 0, void 0, void 0, function* () {
+        let orders = arg;
+        console.log(orders);
+        //for(let order of orders){
+        //await Order.insert({book_id:order.id, amount:order.amount, user_id:order.userId})
+        //}
+        const orderQuery = yield Order_1.Order.find({ relations: { book: true } });
+        console.log(orderQuery);
+    }));
 });
 server.listen(4662, () => {
     console.log('server start on port : 4662');

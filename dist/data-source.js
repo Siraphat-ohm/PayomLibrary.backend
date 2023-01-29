@@ -14,6 +14,7 @@ const Member_status_1 = require("./entity/Member_status");
 const Reservation_1 = require("./entity/Reservation");
 const Reservation_status_1 = require("./entity/Reservation_status");
 const User_1 = require("./entity/User");
+const Order_1 = require("./entity/Order");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 exports.AppDataSource = new typeorm_1.DataSource({
@@ -25,7 +26,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     database: process.env.DB,
     synchronize: true,
     logging: false,
-    entities: [User_1.User, Book_1.Book, Book_author_1.Book_author, Author_1.Author, Category_1.Category, Loan_1.Loan, Member_status_1.Member_status, Reservation_1.Reservation, Reservation_status_1.Reservation_status],
+    entities: [User_1.User, Book_1.Book, Book_author_1.Book_author, Author_1.Author, Category_1.Category, Loan_1.Loan, Member_status_1.Member_status, Reservation_1.Reservation, Reservation_status_1.Reservation_status, Order_1.Order],
     migrations: [],
     subscribers: [],
 });
