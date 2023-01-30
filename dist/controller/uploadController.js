@@ -11,35 +11,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Author_1 = require("../entity/Author");
 const Book_1 = require("../entity/Book");
-const Book_author_1 = require("../entity/Book_author");
 const handleUpload = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, category, author, edition, publication_year, page, language, detail, amount, ISBN } = req.body;
+    const { title, category, author, edition, publication_year, language, detail, amount, ISBN, page } = req.body;
+    const [fname, lname] = author.split(" ");
     try {
-        let allAuthor = yield Author_1.Author.find({ select: { name: true } });
-        const arrAuthor = allAuthor.map(item => item.name);
-        if (!(arrAuthor.includes(author))) {
-            yield Author_1.Author.insert({
-                name: author
-            });
-        }
-        yield Book_1.Book.insert({
-            title: title,
-            category_id: category,
-            edition: edition,
-            publication_year: publication_year,
-            page: page,
-            language: language,
-            detail: detail,
-            copies_owned: amount,
-            ISBN: ISBN,
-            graphic: req.file.filename
-        });
-        const author_id = yield Author_1.Author.find({ select: { author_id: true }, where: { name: author } });
-        const book_id = yield Book_1.Book.find({ select: { id: true }, where: { title: title } });
-        yield Book_author_1.Book_author.insert({
-            book_id: Number(book_id[0].id),
-            author_id: Number(author_id[0].author_id)
-        });
+        const author = new Author_1.Author();
+        author.fname = fname;
+        author.lname = lname;
+        yield Author_1.Author.save(author);
+        const book = new Book_1.Book();
+        book.title = title;
+        book.authors = [author];
+        book.categoryId = category;
+        book.edition = edition;
+        book.pubYear = publication_year;
+        book.language = language;
+        book.copies = amount;
+        book.description = detail;
+        book.ISBN = ISBN;
+        book.page = page;
+        book.graphic = req.file.filename;
+        yield Book_1.Book.save(book);
         res.sendStatus(200);
     }
     catch (error) {

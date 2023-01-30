@@ -1,12 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm"
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Book } from "./Book";
+
 
 @Entity()
-export class Author extends BaseEntity{
+export class Author extends BaseEntity {
 
-    @PrimaryGeneratedColumn("increment")
-    author_id: number
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
     @Column()
-    name: string
+    fname: string
+
+    @Column()
+    lname: string
+
+    @ManyToOne(() => Book, (book) => book.authors)
+    book: Book
 
 }

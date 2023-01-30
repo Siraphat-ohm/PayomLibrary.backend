@@ -21,7 +21,7 @@ const handleRefreshToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.sendStatus(401);
     const refreshToken = cookies.jwt;
     try {
-        const foundUser = yield User_1.User.find({ where: { userName: req.user } });
+        const foundUser = yield User_1.User.find({ where: { refreshToken: refreshToken } });
         if (foundUser.length == 0)
             return res.sendStatus(403);
         const TKM = new tokenManager_1.default({ user: foundUser[0].userName, role: foundUser[0].role });

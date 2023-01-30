@@ -6,7 +6,6 @@ const getAllBooks = async(req:Request, res:Response, next:Function) => {
     
     try {
         let data = await Book.find()
-        console.log(data);
         res.json(data)
     } catch (error) {
         console.error(error);
@@ -24,6 +23,7 @@ const paginationBooks = async(req:Request, res:Response, next:Function) => {
     }
 
     try {
+
         let data = await Book.find(
             {
                 skip:(calSkip(Number(page),size)),
@@ -31,7 +31,7 @@ const paginationBooks = async(req:Request, res:Response, next:Function) => {
             }
         )
         
-        const filename = fs.readdirSync('./uploads/')
+        const filename = fs.readdirSync('./uploads/');
         
         data.forEach((element, index) => {
                 data[index].graphic = fs.readFileSync(`./uploads/${filename.find(item => data[index].graphic == item)}`, { encoding : 'base64' })

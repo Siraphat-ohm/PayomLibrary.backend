@@ -9,29 +9,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Author = void 0;
+exports.Language = void 0;
 const typeorm_1 = require("typeorm");
 const Book_1 = require("./Book");
-let Author = class Author extends typeorm_1.BaseEntity {
+let Language = class Language extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
-], Author.prototype, "id", void 0);
+], Language.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Author.prototype, "fname", void 0);
+], Language.prototype, "language", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Author.prototype, "lname", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => Book_1.Book, (book) => book.authors),
+    (0, typeorm_1.OneToOne)(() => Book_1.Book, book => book.language),
     __metadata("design:type", Book_1.Book)
-], Author.prototype, "book", void 0);
-Author = __decorate([
+], Language.prototype, "book", void 0);
+Language = __decorate([
     (0, typeorm_1.Entity)()
-], Author);
-exports.Author = Author;
-//# sourceMappingURL=Author.js.map
+], Language);
+exports.Language = Language;
+//# sourceMappingURL=Language.js.map

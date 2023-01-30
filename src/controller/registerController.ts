@@ -7,7 +7,6 @@ const handleRegister = async(req:Request, res:Response, next:Function) => {
     if(!user || !pwd) return res.status(400).json({"message": "Username and password are required"})
 
     const duplicate = await User.find( { where : { userName : user}});
-    console.log(duplicate);
     if(duplicate.length != 0) return res.sendStatus(409);
 
     try {

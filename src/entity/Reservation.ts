@@ -1,21 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm"
+import { BaseEntity, Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Book } from "./Book";
+import { User } from "./User";
+
 
 @Entity()
-export class Reservation extends BaseEntity{
+export class Reservation extends BaseEntity {
 
-    @PrimaryGeneratedColumn("increment")
-    id: number
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
-    @Column()
-    book_id: number
+    @OneToOne(() => User, user => user.id, {onUpdate:"RESTRICT"})
+    userId: User
 
-    @Column()
-    member_id: number
-
-    @Column()
-    load_date: Date
+    @OneToOne(() => Book, book => book.id)
+    bookId: Book
 
     @Column()
-    returned_date: Date
+    amount: number
+
+    @Column('date')
+    loanDate: Date
+
+    @Column('date')
+    returnDate: Date
 
 }

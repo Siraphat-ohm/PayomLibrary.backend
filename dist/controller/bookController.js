@@ -14,7 +14,6 @@ const fs = require('fs');
 const getAllBooks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let data = yield Book_1.Book.find();
-        console.log(data);
         res.json(data);
     }
     catch (error) {

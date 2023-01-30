@@ -9,23 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_1 = require("../entity/User");
-const bcrypt = require('bcrypt');
-const handleRegister = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    let { user, pwd, role } = req.body;
-    if (!user || !pwd)
-        return res.status(400).json({ "message": "Username and password are required" });
-    const duplicate = yield User_1.User.find({ where: { userName: user } });
-    if (duplicate.length != 0)
-        return res.sendStatus(409);
+const Order_1 = require("../entity/Order");
+const handleOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let pwdHash = bcrypt.hashSync(pwd, 10);
-        yield User_1.User.insert({ userName: user, passWord: pwdHash, role: role });
-        res.sendStatus(200);
+        const data = yield Order_1.Order.find({ relations: { books: true }, select: { books: { title: true, ISBN: true } } });
+        res.json(data).status(200);
     }
     catch (error) {
-        next(error);
+        console.log(error);
+        res.sendStatus(404);
     }
 });
-exports.default = { handleRegister };
-//# sourceMappingURL=registerController.js.map
+exports.default = { handleOrder };
+//# sourceMappingURL=orderController.js.map

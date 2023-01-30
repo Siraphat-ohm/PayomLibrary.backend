@@ -53,41 +53,67 @@ app.use(credentials_1.default);
 app.use((0, cors_1.default)(corsOptions_1.default));
 app.use((0, cookie_parser_1.default)());
 //routes
+const register_1 = __importDefault(require("./routes/admin/register"));
 const login_1 = __importDefault(require("./routes/login"));
 const logout_1 = __importDefault(require("./routes/logout"));
+const auth_1 = __importDefault(require("./routes/auth"));
+const refresh_1 = __importDefault(require("./routes/refresh"));
 const upload_1 = __importDefault(require("./routes/admin/upload"));
 const book_1 = __importDefault(require("./routes/client/api/book"));
-const register_1 = __importDefault(require("./routes/admin/register"));
+const order_1 = __importDefault(require("./routes/admin/order"));
+const Book_1 = require("./entity/Book");
+const Author_1 = require("./entity/Author");
 const verifyAccessToken_1 = __importDefault(require("./middleware/verifyAccessToken"));
-const refresh_1 = __importDefault(require("./routes/refresh"));
-const auth_1 = __importDefault(require("./routes/auth"));
 const Order_1 = require("./entity/Order");
-app.use('/auth', auth_1.default);
-app.use('/refresh', refresh_1.default);
-app.use('/logout', logout_1.default);
-app.use('/register', register_1.default);
-app.use('/system-login', login_1.default);
-app.use('/login', login_1.default);
+const User_1 = require("./entity/User");
+app.use('/api/refresh', refresh_1.default);
+app.use('/api/auth', auth_1.default);
+app.use('/api/register', register_1.default);
+app.use('/api/login', login_1.default);
+app.use('/api/logout', logout_1.default);
+app.use('/api/system-login', login_1.default);
 app.use(verifyAccessToken_1.default);
-app.use('/upload', upload_1.default);
-app.use('/books', book_1.default);
+app.use('/api/upload', upload_1.default);
+app.use('/api/books', book_1.default);
+app.use('/api/getOrder', order_1.default);
+app.get("/book", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield Book_1.Book.find({ relations: { authors: true } });
+    const author = yield Author_1.Author.find();
+    res.json({ data, author }).status(200);
+}));
 const server = http.createServer(app);
 const io = new socketio.Server(server, {
     cors: {
-        origin: "http://127.0.0.1:5173",
+        origin: "*",
         methods: ["GET", "POST"]
     }
 });
 io.on("connection", (socket) => {
-    socket.broadcast.emit('hello', 'ayyyy');
     socket.on("order", (arg) => __awaiter(void 0, void 0, void 0, function* () {
-        let orders = arg;
-        console.log(orders);
-        //for(let order of orders){
-        //await Order.insert({book_id:order.id, amount:order.amount, user_id:order.userId})
-        //}
-        const orderQuery = yield Order_1.Order.find({ relations: { book: true } });
-        console.log(orderQuery);
+        for (let order of arg) {
+            let foundUser = yield User_1.User.find({ where: { id: order.userId } });
+            if (foundUser.length == 0)
+                return;
+            if (!foundUser[0].isLoan) {
+                try {
+                    let orders = new Order_1.Order();
+                    let book = yield Book_1.Book.find({ where: { id: order.id } });
+                    orders.books = book[0];
+                    orders.amount = order.amount;
+                    orders.userId = order.userId;
+                    yield Order_1.Order.save(orders);
+                    yield User_1.User.update({ id: order.userId }, { isLoan: true });
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+            else {
+                break;
+            }
+        }
+        const data = yield Order_1.Order.find({ relations: { books: true }, select: { books: { title: true, ISBN: true } } });
+        yield socket.broadcast.emit("send-order", data);
     }));
 });
 server.listen(4662, () => {

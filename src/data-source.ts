@@ -1,16 +1,13 @@
 import { DataSource } from "typeorm"
 import { Author } from "./entity/Author"
 import { Book } from "./entity/Book"
-import { Book_author } from "./entity/Book_author"
-import { Category } from "./entity/Category"
-import { Loan } from "./entity/Loan"
-import { Member_status } from "./entity/Member_status"
-import { Reservation } from "./entity/Reservation"
-import { Reservation_status } from "./entity/Reservation_status"
-import { User } from "./entity/User"
-import { Order } from "./entity/Order"
 
 import dotenv from "dotenv"
+import { User } from "./entity/User"
+import { Language } from "./entity/Language"
+import { Order } from "./entity/Order"
+import { Reservation } from "./entity/Reservation"
+import { Loan } from "./entity/Loan"
 dotenv.config()
 
 export const AppDataSource = new DataSource({
@@ -22,7 +19,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB,
     synchronize: true,
     logging: false,
-    entities: [User, Book, Book_author, Author, Category, Loan, Member_status, Reservation, Reservation_status, Order],
+    entities: [Book, Author, User, Language, Order, Reservation, Loan],
     migrations: [],
     subscribers: [],
 })

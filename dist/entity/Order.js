@@ -11,20 +11,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Order = void 0;
 const typeorm_1 = require("typeorm");
+const Book_1 = require("./Book");
 let Order = class Order extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)("increment"),
-    __metadata("design:type", Number)
+    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    __metadata("design:type", String)
 ], Order.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Order.prototype, "book_id", void 0);
+    (0, typeorm_1.OneToOne)(() => Book_1.Book, { onDelete: "RESTRICT", onUpdate: "RESTRICT", cascade: false }),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Book_1.Book)
+], Order.prototype, "books", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], Order.prototype, "amount", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Order.prototype, "userId", void 0);
 Order = __decorate([
     (0, typeorm_1.Entity)()
 ], Order);

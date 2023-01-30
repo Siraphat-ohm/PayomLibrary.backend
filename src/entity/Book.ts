@@ -1,39 +1,44 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm"
+import { BaseEntity, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Author } from "./Author";
+import { Language } from "./Language";
 
 @Entity()
-export class Book extends BaseEntity{
+export class Book extends BaseEntity {
 
-    @PrimaryGeneratedColumn("increment")
-    id: number
+    @PrimaryGeneratedColumn("uuid")
+    id: string
 
     @Column()
     title: string
 
-    @Column()
-    category_id: string 
+    @OneToMany(() => Author, (author) => author.book)
+    authors: Author[]
 
-    @Column()
-    edition: string
+    @Column('text')
+    description: string
 
-    @Column()
-    publication_year: string 
+    @Column({ default: 1 })
+    categoryId: number
 
-    @Column()
-    copies_owned: string
-
-    @Column()
-    graphic: string
-
-    @Column()
-    language: string
-
-    @Column()
-    page:number
+    @OneToOne(() => Language, language => language.book)
+    language: Language
 
     @Column()
     ISBN: string
 
-    @Column("text")
-    detail: string
+    @Column()
+    pubYear: string
+
+    @Column()
+    edition: number
+
+    @Column()
+    page: number
+
+    @Column()
+    copies: number
+
+    @Column( { nullable: true } )
+    graphic: string
 
 }

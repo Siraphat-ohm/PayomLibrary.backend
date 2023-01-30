@@ -11,7 +11,7 @@ const handleRefreshToken = async(req:Request, res:Response) => {
     
     try {
 
-        const foundUser = await User.find( {where : { userName : req.user } })
+        const foundUser = await User.find( { where : { refreshToken : refreshToken } })
         if(foundUser.length == 0 ) return res.sendStatus(403);
         const TKM = new TokenManager( { user: foundUser[0].userName, role : foundUser[0].role} )
         
