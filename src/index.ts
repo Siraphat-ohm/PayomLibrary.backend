@@ -69,24 +69,24 @@ const io = new socketio.Server(server, {
 io.on("connection", (socket) => {
     socket.on("order", async(arg) => {
         for (let order of arg) {
-            let foundUser = await User.find( { where : { id:order.userId }} )
+            try {
+            let foundUser = await User.find( { where : { id: order.userId }} )
+            let foundBook = await Book.find( { where: { id: order.id } } )
             if (foundUser.length == 0 ) return 
+            console.log("🚀 ~ file: index.ts:76 ~ socket.on ~ foundBook", foundBook)
+            if (foundBook[0].copies - order.amount <= 0) return socket.broadcast.emit('order', "Order error.")
             if (!foundUser[0].isLoan) {
-                try {
                     let orders = new Order()
-                    let book = await Book.find( { where: { id: order.id } } )
-                    orders.books = book[0];
+                    orders.books = foundBook[0];
                     orders.amount = order.amount;
                     orders.userId = order.userId;
-                    await Order.save(orders)
-                    await User.update({id: order.userId }, { isLoan : true } )
-                } catch (error) {
+                    await Order.save(orders);
+                    await User.update({id: order.userId }, { isLoan : true } );
+                } else { socket.broadcast.emit('order', 'User is loan.') }
+            } catch (error) {
                     console.log(error);
                 }
-            } else {
-                break
-            }
-        }
+    }
         const data = await Order.find({relations: { books:true}, select: { books: { title:true, ISBN:true }}})
         await socket.broadcast.emit("send-order", data)
     })

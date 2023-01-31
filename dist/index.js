@@ -91,25 +91,28 @@ const io = new socketio.Server(server, {
 io.on("connection", (socket) => {
     socket.on("order", (arg) => __awaiter(void 0, void 0, void 0, function* () {
         for (let order of arg) {
-            let foundUser = yield User_1.User.find({ where: { id: order.userId } });
-            if (foundUser.length == 0)
-                return;
-            if (!foundUser[0].isLoan) {
-                try {
+            try {
+                let foundUser = yield User_1.User.find({ where: { id: order.userId } });
+                let foundBook = yield Book_1.Book.find({ where: { id: order.id } });
+                if (foundUser.length == 0)
+                    return;
+                console.log("🚀 ~ file: index.ts:76 ~ socket.on ~ foundBook", foundBook);
+                if (foundBook[0].copies - order.amount <= 0)
+                    return socket.broadcast.emit('order', "Order error.");
+                if (!foundUser[0].isLoan) {
                     let orders = new Order_1.Order();
-                    let book = yield Book_1.Book.find({ where: { id: order.id } });
-                    orders.books = book[0];
+                    orders.books = foundBook[0];
                     orders.amount = order.amount;
                     orders.userId = order.userId;
                     yield Order_1.Order.save(orders);
                     yield User_1.User.update({ id: order.userId }, { isLoan: true });
                 }
-                catch (error) {
-                    console.log(error);
+                else {
+                    socket.broadcast.emit('order', 'User is loan.');
                 }
             }
-            else {
-                break;
+            catch (error) {
+                console.log(error);
             }
         }
         const data = yield Order_1.Order.find({ relations: { books: true }, select: { books: { title: true, ISBN: true } } });
