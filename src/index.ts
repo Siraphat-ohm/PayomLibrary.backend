@@ -89,7 +89,6 @@ io.on("connection", (socket) => {
         }
         const data = await Order.find({relations: { books:true}, select: { books: { title:true, ISBN:true }}})
         await socket.broadcast.emit("send-order", data)
-        
     })
 })
 
