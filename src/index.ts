@@ -69,48 +69,58 @@ const io = new socketio.Server(server, {
 })
 
 io.on("connection", (socket) => {
+    let socketMap = {};
+    
+
+    socket.on('join', (room) => {
+        socket.join(room);
+        socketMap[socket.id] = room;
+    });
+
     socket.on("order", async(arg) => {
         try {
-            const books = []
+            const booksId = []
             for ( let order of arg ) { 
                 try {
-                    const book = await Book.findOneOrFail( { where : { copies : MoreThanOrEqual(order.amount), id: order.id } } );
-                    books.push(book);
+                    const book = await Book.findOneOrFail( { where : { copies : MoreThanOrEqual(1), id: order.id } } );
+                    booksId.push(order.id);
                 } catch (error) {
-                    console.log("fuck");
+                    io.to(socketMap[socket.id]).emit('order', "out of stock")
                     return;
                 }
             }
 
-            const order = new Order();
-            order.bookOrders = books;
-            order.userId = arg[0].userId;
-            await Order.save(order);
+            const books = []
+            for ( let id of booksId ){
+                try {
+                    const bookQuery = await Book.findOne( { where : { id:id }})
+                    const bookUpdate = new BookOrder();
+                    bookUpdate.book = bookQuery;
+                    bookUpdate.bookId = id
+                    books.push(bookUpdate);
+                    await BookOrder.save(bookUpdate);
+                } catch(error) {
+                    console.log(error);
+                }
+            }
 
-            const orders = await Order.find( { relations: { bookOrders: true } } )
-            console.log(orders);
-            socket.emit("send-order", orders);
+            const orders = new Order();
+            orders.bookOrders = books;
+            orders.userId = arg[0].userId;
+            await Order.save(orders);
 
-
-            // for ( let book of books ) {
-                // try {
-                    // const bookUpdate = new BookOrder();
-                    // bookUpdate.ISBN = book.ISBN;
-                    // bookUpdate.amount = 1;
-                    // bookUpdate.title = book.title;
-                    // bookUpdate.bookId = book.id
-                    // await BookOrder.save(bookUpdate);
-                    // book.copies--;
-                    // await book.save()
-                    // console.log('yay');
-                // } catch (error) {
-                    // console.log(error);
-                // }
-            // }
-
+            const data = await Order.find( { relations : { bookOrders : {
+                book: true
+            }}} )
+            
+                
         } catch (error) {
             console.log(error);
         }
+    })
+
+    socket.on("disconnect", (room) => {
+        socketMap = {}
     })
 })
 

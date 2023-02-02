@@ -65,6 +65,7 @@ const Book_1 = require("./entity/Book");
 const Author_1 = require("./entity/Author");
 const verifyAccessToken_1 = __importDefault(require("./middleware/verifyAccessToken"));
 const Order_1 = require("./entity/Order");
+const BookOrder_1 = require("./entity/BookOrder");
 const typeorm_1 = require("typeorm");
 app.use('/api/refresh', refresh_1.default);
 app.use('/api/auth', auth_1.default);
@@ -89,46 +90,53 @@ const io = new socketio.Server(server, {
     }
 });
 io.on("connection", (socket) => {
+    let socketMap = {};
+    socket.on('join', (room) => {
+        socket.join(room);
+        socketMap[socket.id] = room;
+    });
     socket.on("order", (arg) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const books = [];
+            const booksId = [];
             for (let order of arg) {
                 try {
-                    const book = yield Book_1.Book.findOneOrFail({ where: { copies: (0, typeorm_1.MoreThanOrEqual)(order.amount), id: order.id } });
-                    books.push(book);
+                    const book = yield Book_1.Book.findOneOrFail({ where: { copies: (0, typeorm_1.MoreThanOrEqual)(1), id: order.id } });
+                    booksId.push(order.id);
                 }
                 catch (error) {
-                    console.log("fuck");
+                    io.to(socketMap[socket.id]).emit('order', "out of stock");
                     return;
                 }
             }
-            const order = new Order_1.Order();
-            order.bookOrders = books;
-            order.userId = arg[0].userId;
-            yield Order_1.Order.save(order);
-            const orders = yield Order_1.Order.find({ relations: { bookOrders: true } });
-            console.log(orders);
-            socket.emit("send-order", orders);
-            // for ( let book of books ) {
-            // try {
-            // const bookUpdate = new BookOrder();
-            // bookUpdate.ISBN = book.ISBN;
-            // bookUpdate.amount = 1;
-            // bookUpdate.title = book.title;
-            // bookUpdate.bookId = book.id
-            // await BookOrder.save(bookUpdate);
-            // book.copies--;
-            // await book.save()
-            // console.log('yay');
-            // } catch (error) {
-            // console.log(error);
-            // }
-            // }
+            const books = [];
+            for (let id of booksId) {
+                try {
+                    const bookQuery = yield Book_1.Book.findOne({ where: { id: id } });
+                    const bookUpdate = new BookOrder_1.BookOrder();
+                    bookUpdate.book = bookQuery;
+                    bookUpdate.bookId = id;
+                    books.push(bookUpdate);
+                    yield BookOrder_1.BookOrder.save(bookUpdate);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+            const orders = new Order_1.Order();
+            orders.bookOrders = books;
+            orders.userId = arg[0].userId;
+            yield Order_1.Order.save(orders);
+            const data = yield Order_1.Order.find({ relations: { bookOrders: {
+                        book: true
+                    } } });
         }
         catch (error) {
             console.log(error);
         }
     }));
+    socket.on("disconnect", (room) => {
+        socketMap = {};
+    });
 });
 server.listen(4662, () => {
     console.log('server start on port : 4662');

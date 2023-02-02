@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm"
 import { Book } from "./Book"
 import { Order } from "./Order"
 
@@ -11,7 +11,8 @@ export class BookOrder extends BaseEntity {
     @Column()
     bookId: string
 
-    @Column()
+    @OneToOne(() => Book)
+    @JoinColumn()
     book: Book
 
     @ManyToOne(() => Order, (order) => order.bookOrders)

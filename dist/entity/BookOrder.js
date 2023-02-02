@@ -24,7 +24,8 @@ __decorate([
     __metadata("design:type", String)
 ], BookOrder.prototype, "bookId", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.OneToOne)(() => Book_1.Book),
+    (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Book_1.Book)
 ], BookOrder.prototype, "book", void 0);
 __decorate([
