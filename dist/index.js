@@ -65,7 +65,7 @@ const Book_1 = require("./entity/Book");
 const Author_1 = require("./entity/Author");
 const verifyAccessToken_1 = __importDefault(require("./middleware/verifyAccessToken"));
 const Order_1 = require("./entity/Order");
-const User_1 = require("./entity/User");
+const typeorm_1 = require("typeorm");
 app.use('/api/refresh', refresh_1.default);
 app.use('/api/auth', auth_1.default);
 app.use('/api/register', register_1.default);
@@ -90,33 +90,44 @@ const io = new socketio.Server(server, {
 });
 io.on("connection", (socket) => {
     socket.on("order", (arg) => __awaiter(void 0, void 0, void 0, function* () {
-        for (let order of arg) {
-            try {
-                let foundUser = yield User_1.User.find({ where: { id: order.userId } });
-                let foundBook = yield Book_1.Book.find({ where: { id: order.id } });
-                if (foundUser.length == 0)
+        try {
+            const books = [];
+            for (let order of arg) {
+                try {
+                    const book = yield Book_1.Book.findOneOrFail({ where: { copies: (0, typeorm_1.MoreThanOrEqual)(order.amount), id: order.id } });
+                    books.push(book);
+                }
+                catch (error) {
+                    console.log("fuck");
                     return;
-                console.log("🚀 ~ file: index.ts:76 ~ socket.on ~ foundBook", foundBook);
-                if (foundBook[0].copies - order.amount <= 0)
-                    return socket.broadcast.emit('order', "Order error.");
-                if (!foundUser[0].isLoan) {
-                    let orders = new Order_1.Order();
-                    orders.books = foundBook[0];
-                    orders.amount = order.amount;
-                    orders.userId = order.userId;
-                    yield Order_1.Order.save(orders);
-                    yield User_1.User.update({ id: order.userId }, { isLoan: true });
-                }
-                else {
-                    socket.broadcast.emit('order', 'User is loan.');
                 }
             }
-            catch (error) {
-                console.log(error);
-            }
+            const order = new Order_1.Order();
+            order.bookOrders = books;
+            order.userId = arg[0].userId;
+            yield Order_1.Order.save(order);
+            const orders = yield Order_1.Order.find({ relations: { bookOrders: true } });
+            console.log(orders);
+            socket.emit("send-order", orders);
+            // for ( let book of books ) {
+            // try {
+            // const bookUpdate = new BookOrder();
+            // bookUpdate.ISBN = book.ISBN;
+            // bookUpdate.amount = 1;
+            // bookUpdate.title = book.title;
+            // bookUpdate.bookId = book.id
+            // await BookOrder.save(bookUpdate);
+            // book.copies--;
+            // await book.save()
+            // console.log('yay');
+            // } catch (error) {
+            // console.log(error);
+            // }
+            // }
         }
-        const data = yield Order_1.Order.find({ relations: { books: true }, select: { books: { title: true, ISBN: true } } });
-        yield socket.broadcast.emit("send-order", data);
+        catch (error) {
+            console.log(error);
+        }
     }));
 });
 server.listen(4662, () => {

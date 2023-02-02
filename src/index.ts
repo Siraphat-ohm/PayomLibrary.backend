@@ -39,6 +39,8 @@ import { Author } from "./entity/Author";
 import verifyAcessToken from "./middleware/verifyAccessToken";
 import { Order } from "./entity/Order";
 import { User } from "./entity/User";
+import { BookOrder } from "./entity/BookOrder";
+import { LessThan, LessThanOrEqual, MoreThanOrEqual, QueryBuilder } from "typeorm";
 
 app.use('/api/refresh', refresh);
 app.use('/api/auth', auth);
@@ -68,27 +70,47 @@ const io = new socketio.Server(server, {
 
 io.on("connection", (socket) => {
     socket.on("order", async(arg) => {
-        for (let order of arg) {
-            try {
-            let foundUser = await User.find( { where : { id: order.userId }} )
-            let foundBook = await Book.find( { where: { id: order.id } } )
-            if (foundUser.length == 0 ) return 
-            console.log("🚀 ~ file: index.ts:76 ~ socket.on ~ foundBook", foundBook)
-            if (foundBook[0].copies - order.amount <= 0) return socket.broadcast.emit('order', "Order error.")
-            if (!foundUser[0].isLoan) {
-                    let orders = new Order()
-                    orders.books = foundBook[0];
-                    orders.amount = order.amount;
-                    orders.userId = order.userId;
-                    await Order.save(orders);
-                    await User.update({id: order.userId }, { isLoan : true } );
-                } else { socket.broadcast.emit('order', 'User is loan.') }
-            } catch (error) {
-                    console.log(error);
+        try {
+            const books = []
+            for ( let order of arg ) { 
+                try {
+                    const book = await Book.findOneOrFail( { where : { copies : MoreThanOrEqual(order.amount), id: order.id } } );
+                    books.push(book);
+                } catch (error) {
+                    console.log("fuck");
+                    return;
                 }
-    }
-        const data = await Order.find({relations: { books:true}, select: { books: { title:true, ISBN:true }}})
-        await socket.broadcast.emit("send-order", data)
+            }
+
+            const order = new Order();
+            order.bookOrders = books;
+            order.userId = arg[0].userId;
+            await Order.save(order);
+
+            const orders = await Order.find( { relations: { bookOrders: true } } )
+            console.log(orders);
+            socket.emit("send-order", orders);
+
+
+            // for ( let book of books ) {
+                // try {
+                    // const bookUpdate = new BookOrder();
+                    // bookUpdate.ISBN = book.ISBN;
+                    // bookUpdate.amount = 1;
+                    // bookUpdate.title = book.title;
+                    // bookUpdate.bookId = book.id
+                    // await BookOrder.save(bookUpdate);
+                    // book.copies--;
+                    // await book.save()
+                    // console.log('yay');
+                // } catch (error) {
+                    // console.log(error);
+                // }
+            // }
+
+        } catch (error) {
+            console.log(error);
+        }
     })
 })
 

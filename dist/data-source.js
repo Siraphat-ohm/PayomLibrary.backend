@@ -13,6 +13,7 @@ const Language_1 = require("./entity/Language");
 const Order_1 = require("./entity/Order");
 const Reservation_1 = require("./entity/Reservation");
 const Loan_1 = require("./entity/Loan");
+const BookOrder_1 = require("./entity/BookOrder");
 dotenv_1.default.config();
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "mysql",
@@ -23,7 +24,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     database: process.env.DB,
     synchronize: true,
     logging: false,
-    entities: [Book_1.Book, Author_1.Author, User_1.User, Language_1.Language, Order_1.Order, Reservation_1.Reservation, Loan_1.Loan],
+    entities: [Book_1.Book, Author_1.Author, User_1.User, Language_1.Language, Order_1.Order, Reservation_1.Reservation, Loan_1.Loan, BookOrder_1.BookOrder],
     migrations: [],
     subscribers: [],
 });

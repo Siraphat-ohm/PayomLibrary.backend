@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Order_1 = require("../entity/Order");
 const handleOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield Order_1.Order.find({ relations: { books: true }, select: { books: { title: true, ISBN: true } } });
+        const data = yield Order_1.Order.find();
         res.json(data).status(200);
     }
     catch (error) {

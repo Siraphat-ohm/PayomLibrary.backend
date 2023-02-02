@@ -4,7 +4,7 @@ import { Order } from "../entity/Order";
 
 const handleOrder = async(req:Request, res:Response, next:Function) => {
     try {
-        const data = await Order.find({relations: { books:true}, select: { books: { title:true, ISBN:true }}})
+        const data = await Order.find()
         res.json(data).status(200);
     } catch (error) {
         console.log(error);
