@@ -1,5 +1,4 @@
-import { BaseEntity, Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Book } from "./Book";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -10,8 +9,4 @@ export class Language extends BaseEntity {
 
     @Column()
     language: string
-
-    @OneToOne(() => Book, book => book.language)
-    book: Book
-
 }

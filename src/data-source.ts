@@ -6,9 +6,7 @@ import dotenv from "dotenv"
 import { User } from "./entity/User"
 import { Language } from "./entity/Language"
 import { Order } from "./entity/Order"
-import { Reservation } from "./entity/Reservation"
 import { Loan } from "./entity/Loan"
-import { BookOrder } from "./entity/BookOrder"
 dotenv.config()
 
 export const AppDataSource = new DataSource({
@@ -20,7 +18,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB,
     synchronize: true,
     logging: false,
-    entities: [Book, Author, User, Language, Order, Reservation, Loan, BookOrder],
+    entities: [Book, Author, User, Language, Order, Loan],
     migrations: [],
     subscribers: [],
 })

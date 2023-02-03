@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Author } from "./Author";
 import { Language } from "./Language";
 
@@ -11,7 +11,7 @@ export class Book extends BaseEntity {
     @Column()
     title: string
 
-    @OneToMany(() => Author, (author) => author.book)
+    @ManyToMany(() => Author, (author) => author.id)
     authors: Author[]
 
     @Column('text')
@@ -20,17 +20,14 @@ export class Book extends BaseEntity {
     @Column({ default: 1 })
     categoryId: number
 
-    @OneToOne(() => Language, language => language.book)
+    @ManyToOne(() => Language, language => language.id)
     language: Language
 
     @Column()
     ISBN: string
 
     @Column()
-    pubYear: string
-
-    @Column()
-    edition: number
+    pubYear: number
 
     @Column()
     page: number
@@ -39,6 +36,6 @@ export class Book extends BaseEntity {
     copies: number
 
     @Column( { nullable: true } )
-    graphic: string
+    thumbnail: string
 
 }

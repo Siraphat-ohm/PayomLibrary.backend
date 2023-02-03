@@ -10,18 +10,18 @@ const handleLogin = async (req:Request, res:Response, next:Function) => {
     if (!user || !pwd) return res.json({ 'message' : "Username and password are required."} ).status(400)
 
     try {
-        let foundUser = await User.find( { where: { userName:req.body.user }})
+        let foundUser = await User.findOne( { where: { userName:req.body.user }})
 
-        if(foundUser.length == 0) return res.status(401).json( {"message" : "not found user"})
+        if(!foundUser) return res.status(401).json( {"message" : "not found user"})
 
-        const userInput : string = foundUser[0].userName
-        const pwdInput : string = foundUser[0].passWord
-        const role : number = foundUser[0].role
+        const userInput : string = foundUser.userName
+        const pwdInput : string = foundUser.passWord
+        const role : number = foundUser.role
         
         const payload : payload = { user:userInput, role:role }
         const TKM = new TokenManager(payload)
 
-        if (userInput == user && await bcrypt.compareSync(pwd, pwdInput)) {
+        if (await bcrypt.compareSync(pwd, pwdInput)) {
             const accessToken = TKM.generateAcessToken()
             const refreshToken = TKM.generateRefreshToken()
 

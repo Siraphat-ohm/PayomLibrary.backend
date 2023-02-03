@@ -1,7 +1,6 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Book } from "./Book";
 
-
 @Entity()
 export class Author extends BaseEntity {
 
@@ -14,7 +13,7 @@ export class Author extends BaseEntity {
     @Column()
     lname: string
 
-    @ManyToOne(() => Book, (book) => book.authors)
+    @ManyToOne(() => Book, (book) => book.id)
     book: Book
 
 }

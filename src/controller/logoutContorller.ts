@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { User } from "../entity/User";
-import TokenManager from "../token/tokenManager";
-
 
 const handleLogout = async(req:Request, res:Response, next:Function) => {
 

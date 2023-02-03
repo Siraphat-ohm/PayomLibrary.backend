@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { BookOrder } from "./BookOrder";
+import { BaseEntity, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Book } from "./Book";
+import { User } from "./User";
 
 @Entity()
 export class Order extends BaseEntity {
@@ -7,10 +8,10 @@ export class Order extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @OneToMany(() => BookOrder, (bookOrder) => bookOrder.order)
-    bookOrders: BookOrder[]
+    @OneToMany(() => Book, (book) => book.id)
+    books : Book[]
 
-    @Column()
-    userId: string
+    @OneToOne(() => User)
+    user: User
 
 }

@@ -1,6 +1,5 @@
-import { BaseEntity, Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Book } from "./Book";
-import { User } from "./User";
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Order } from "./Order";
 
 
 @Entity()
@@ -9,19 +8,16 @@ export class Loan extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @OneToOne(() => User, user => user.id, {onUpdate:"RESTRICT"})
-    userId: User
+    @OneToOne(() => Order)
+    order: Order
 
-    @OneToOne(() => Book, book => book.id)
-    bookId: Book
-
-    @Column()
-    amount: number
-
-    @Column('date')
+    @CreateDateColumn()
     loanDate: Date
 
     @Column('date')
+    expectDate: Date
+
+    @Column('date', { nullable: true } )
     returnDate: Date
 
 }

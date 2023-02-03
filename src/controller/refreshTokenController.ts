@@ -11,9 +11,9 @@ const handleRefreshToken = async(req:Request, res:Response) => {
     
     try {
 
-        const foundUser = await User.find( { where : { refreshToken : refreshToken } })
-        if(foundUser.length == 0 ) return res.sendStatus(403);
-        const TKM = new TokenManager( { user: foundUser[0].userName, role : foundUser[0].role} )
+        const foundUser = await User.findOne( { where : { refreshToken : refreshToken } })
+        if(foundUser) return res.sendStatus(403);
+        const TKM = new TokenManager( { user: foundUser.userName, role : foundUser.role} )
         
         jwt.verify(refreshToken, process.env.SECRET_KEY_REFRESH, (err:any, decode:payload) => {
             if(err) return res.sendStatus(403);

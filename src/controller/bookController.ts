@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Book } from "../entity/Book";
-const fs = require('fs')
+import * as fs from 'fs'
+
 
 const getAllBooks = async(req:Request, res:Response, next:Function) => {
     
@@ -33,8 +34,17 @@ const paginationBooks = async(req:Request, res:Response, next:Function) => {
         
         const filename = fs.readdirSync('./uploads/');
         
-        data.forEach((element, index) => {
-                data[index].graphic = fs.readFileSync(`./uploads/${filename.find(item => data[index].graphic == item)}`, { encoding : 'base64' })
+        data.forEach((element) => {
+
+                if ( !element.thumbnail.startsWith("http") ) {
+                    const path =`./uploads/${element.thumbnail}`
+                    if ( fs.existsSync( path) ) {
+                        element.thumbnail = `image:asdf/${fs.readFileSync(path,'base64url')}`
+                    } else {
+                        // thumbnail not found
+                    }
+                }
+
         });
 
         res.json(data);

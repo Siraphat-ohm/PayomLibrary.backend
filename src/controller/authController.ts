@@ -5,9 +5,9 @@ const handleAuth = async(req: Request, res:Response, next:Function) => {
     const cookie = req.cookies;
     if (JSON.stringify(cookie) == '{}') return res.json({"isLogin":false});
     try {
-        const foundRefresh = await User.find( { where : { refreshToken : cookie.jwt }})
+        const foundRefresh = await User.findOne( { where : { refreshToken : cookie.jwt }})
         
-        res.json({"isLogin" : true, "user":foundRefresh[0].userName, "role":foundRefresh[0].role, "id":foundRefresh[0].id });
+        res.json({"isLogin" : true, "user":foundRefresh.userName, "role":foundRefresh.role, "id":foundRefresh.id });
         
     } catch(err) {
         console.log(err);
