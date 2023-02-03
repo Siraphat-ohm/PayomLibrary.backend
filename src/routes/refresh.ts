@@ -5,4 +5,4 @@ const router = express.Router();
 
 router.get('/', refreshTokenController.handleRefreshToken);
 
-export = router;
+export default router;

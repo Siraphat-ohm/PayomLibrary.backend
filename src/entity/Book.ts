@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Author } from "./Author";
 import { Language } from "./Language";
+import Category from "./Category";
 
 @Entity()
 export class Book extends BaseEntity {
@@ -11,14 +12,16 @@ export class Book extends BaseEntity {
     @Column()
     title: string
 
-    @ManyToMany(() => Author, (author) => author.id)
-    authors: Author[]
-
     @Column('text')
     description: string
 
-    @Column({ default: 1 })
-    categoryId: number
+    @ManyToMany(() => Author, (author) => author.id)
+    @JoinTable()
+    authors: Author[]
+
+    @ManyToMany(() => Author, (author) => author.id)
+    @JoinTable()
+    categories : Category[]
 
     @ManyToOne(() => Language, language => language.id)
     language: Language

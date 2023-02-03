@@ -3,18 +3,21 @@ import { Book } from "../entity/Book";
 import * as fs from 'fs'
 
 
-const getAllBooks = async(req:Request, res:Response, next:Function) => {
-    
+const getAllBooks = async (req:Request, res:Response, next:Function) => {
+
     try {
+
         let data = await Book.find()
         res.json(data)
+
     } catch (error) {
         console.error(error);
         res.sendStatus(400);
     }
+
 }
 
-const paginationBooks = async(req:Request, res:Response, next:Function) => {
+const paginationBooks = async (req:Request, res:Response, next:Function) => {
 
     let page = req.params.page || 1;
     const size = 10;

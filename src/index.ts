@@ -28,7 +28,7 @@ import logout from "./routes/logout";
 import auth from "./routes/auth"
 import refresh from "./routes/refresh";
 import upload from "./routes/admin/upload";
-import books from "./routes/client/api/book";
+import books from "./routes/book";
 
 import verifyAcessToken from "./middleware/verifyAccessToken";
 

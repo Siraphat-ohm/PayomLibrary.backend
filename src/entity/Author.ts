@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Book } from "./Book";
 
 @Entity()
@@ -8,12 +8,6 @@ export class Author extends BaseEntity {
     id: string
 
     @Column()
-    fname: string
-
-    @Column()
-    lname: string
-
-    @ManyToOne(() => Book, (book) => book.id)
-    book: Book
+    name: string
 
 }

@@ -19,6 +19,7 @@
       "concurrently": "^7.6.0",
       "cookie-parser": "^1.4.6",
       "cors": "^2.8.5",
+      "dayjs": "^1.11.7",
       "dotenv": "^16.0.3",
       "express": "^4.17.2",
       "express-fileupload": "^1.4.0",
@@ -36,6 +37,7 @@
    "scripts": {
       "start:ts": "tsc -w",
       "start:js": "nodemon build/index.js",
-      "start": "concurrently npm:start:*"
+      "start": "concurrently npm:start:*",
+      "build": "tsc"
    }
 }

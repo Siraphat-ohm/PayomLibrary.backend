@@ -3,7 +3,7 @@ import { User } from "../entity/User";
 
 const handleAuth = async(req: Request, res:Response, next:Function) => {
     const cookie = req.cookies;
-    if (JSON.stringify(cookie) == '{}') return res.json({"isLogin":false});
+    if (!!!cookie.jwt) return res.json({"isLogin":false});
     try {
         const foundRefresh = await User.findOne( { where : { refreshToken : cookie.jwt }})
         
