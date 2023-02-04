@@ -5,10 +5,10 @@ export type payload  = {
     role: number
 }
 
-declare module "express" {
-    export interface Request {
-        user? : string
-        role? : number
-        token? : string
+type Payload =  { user? : string , role? : number , token? : string } 
+// declare module "express" {
+declare global {
+    namespace Express {
+        interface Request extends Payload {}
     }
 }
