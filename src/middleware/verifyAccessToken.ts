@@ -11,7 +11,10 @@ const verifyAcessToken = (req:Request, res:Response, next:Function) => {
     if(!authHeader) return res.sendStatus(401);
     const token = authHeader.split(' ')[1]
     jwt.verify(token, process.env.SECRET_KEY_ACESS, (err:Error, decode: DecodeProps) => {
-        if (err) return res.sendStatus(403)
+        if (err)  {
+            console.error( err )
+            return res.sendStatus(403)
+        }
         req.user = decode.user;
         req.role = decode.role;
         next();

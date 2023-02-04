@@ -5,7 +5,7 @@ import { Book } from "../entity/Book";
 
 const router = Router()
 
-router.post('/', async ( req , res , next ) => {
+router.post('/', verifyRoles( roles.libralian ), async ( req , res , next ) => {
     try {
         res.json( await Book.create( req.body ).save() )
     } catch (err) {
@@ -27,5 +27,14 @@ router.get('/:id', async ( req , res , next ) => {
     }
 })
 
+router.get('/', async ( req , res , next ) => {
+    try {
+        res.json(
+            await Book.find()
+        )
+    } catch (err) {
+        next(err)
+    }
+})
 
 export default router

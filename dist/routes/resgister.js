@@ -1,1 +1,0 @@
-//# sourceMappingURL=resgister.js.map
