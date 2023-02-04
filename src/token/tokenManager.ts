@@ -13,7 +13,7 @@ class TokenManager {
     }
 
     generateAcessToken(){
-        this.accessToken = jwt.sign(this.payload, process.env.SECRET_KEY_ACESS, { expiresIn: "3m" });
+        this.accessToken = jwt.sign(this.payload, process.env.SECRET_KEY_ACESS, { expiresIn: "1d" });
         return this.accessToken;
     }
 

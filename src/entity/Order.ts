@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { BaseEntity, Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Book } from "./Book";
 import { User } from "./User";
 import { Loan } from "./Loan";
@@ -13,10 +13,11 @@ export class Order extends BaseEntity {
     @OneToMany(() => Book, (book) => book.id)
     books : Book[]
 
-    @OneToOne(() => User)
+    @OneToOne(() => User )
+    @JoinColumn()
     user: User
 
-    @Column({ default : false })
+    @Column({ default : false , insert : false })
     approve : boolean
 
     async DoApprove() {
