@@ -8,11 +8,20 @@ const router = Router();
 
 router.post("/", async (req, res, next) => {
   try {
+
+    const order =  Order.create( {
+        ...req.body,
+        user : { id : req.userId }
+    })
+
+    console.log( order )
     res.json(
-        await Order.insert( {
-            ...req.body,
-        } )
+        { 
+            order,
+            result : await order.save() 
+        }
     )
+
   } catch (err) {
     next(err);
   }
@@ -24,7 +33,7 @@ router.get('/' , async ( req , res , next ) => {
         const order = await Order.find({
             where : {
                 user : {
-                    id : req.user 
+                    id : req.userId 
                 }
             }
         })
@@ -42,7 +51,7 @@ router.get('/:id' , async ( req , res , next ) => {
         const order = Order.findOne({
             where : {
                 user : {
-                    id : req.user
+                    id : req.userId
                 } ,
                 id : req.params.id
             }

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { BaseEntity, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Book } from "./Book";
 import { User } from "./User";
 import { Loan } from "./Loan";
@@ -10,27 +10,29 @@ export class Order extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @OneToMany(() => Book, (book) => book.id)
+    @ManyToMany(() => Book, (book) => book.id , { eager : true })
+    @JoinTable()
     books : Book[]
 
-    @OneToOne(() => User )
+    @OneToOne(() => User , (u) => u.id )
     @JoinColumn()
     user: User
 
-    @Column({ default : false , insert : false })
+    @Column({ default : false })
     approve : boolean
 
     async DoApprove() {
 
         const loan = Loan.create({
             order : this,
-            expectDate : dayjs().add(7 , 'day')
+            // loanDate : dayjs().toDate(), 
+            expectDate : dayjs().add(7 , 'day').toDate()
         })
         
         this.approve = true        
         await this.save()
 
-        return await loan.save()
+        return  await loan.save()
     }
 
 }

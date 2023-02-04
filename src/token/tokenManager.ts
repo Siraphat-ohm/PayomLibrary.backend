@@ -1,24 +1,24 @@
 import jwt from 'jsonwebtoken';
-import { payload } from '../types/types';
+import { AuthPayload } from '../types/types';
 
 class TokenManager {
     
-    public payload : payload
+    public AuthPayload : AuthPayload
 
     protected accessToken : string;
     protected refreshToken : string 
 
-    constructor(payload : payload){
-        this.payload = payload;
+    constructor(AuthPayload : AuthPayload){
+        this.AuthPayload = AuthPayload;
     }
 
     generateAcessToken(){
-        this.accessToken = jwt.sign(this.payload, process.env.SECRET_KEY_ACESS, { expiresIn: "1d" });
+        this.accessToken = jwt.sign(this.AuthPayload, process.env.SECRET_KEY_ACESS, { expiresIn: "1d" });
         return this.accessToken;
     }
 
     generateRefreshToken(){
-        this.refreshToken = jwt.sign(this.payload, process.env.SECRET_KEY_REFRESH, { expiresIn : "1d" });
+        this.refreshToken = jwt.sign(this.AuthPayload, process.env.SECRET_KEY_REFRESH, { expiresIn : "1d" });
         return this.refreshToken
     }
 

@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany
 import { Author } from "./Author";
 import { Language } from "./Language";
 import Category from "./Category";
+import { Order } from "./Order";
 
 
 @Entity()
@@ -41,5 +42,6 @@ export class Book extends BaseEntity {
 
     @Column( { nullable: true } )
     thumbnail: string
+
 
 }

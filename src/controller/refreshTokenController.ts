@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { User } from "../entity/User";
 import jwt from "jsonwebtoken";
-import { payload } from "../types/types";
+import { AuthPayload } from "../types/types";
 import TokenManager from "../token/tokenManager";
 
 const handleRefreshToken = async(req:Request, res:Response) => {
@@ -13,9 +13,9 @@ const handleRefreshToken = async(req:Request, res:Response) => {
 
         const foundUser = await User.findOne( { where : { refreshToken : refreshToken } })
         if(foundUser) return res.sendStatus(403);
-        const TKM = new TokenManager( { user: foundUser.userName, role : foundUser.role} )
+        const TKM = new TokenManager( { userId: foundUser.id, userRole : foundUser.role} )
         
-        jwt.verify(refreshToken, process.env.SECRET_KEY_REFRESH, (err:any, decode:payload) => {
+        jwt.verify(refreshToken, process.env.SECRET_KEY_REFRESH, (err:any, decode:AuthPayload) => {
             if(err) return res.sendStatus(403);
         const accessToken = TKM.generateAcessToken();
         res.json({ accessToken: accessToken}).status(200);

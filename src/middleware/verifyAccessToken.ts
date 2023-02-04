@@ -1,12 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-
-
-type AuthProps = {
-  user: string;
-  role: number;
-};
-
+import { AuthPayload } from "../types/types";
 
 
 const verifyAcessToken = (req: Request, res: Response, next: Function) => {
@@ -16,13 +10,13 @@ const verifyAcessToken = (req: Request, res: Response, next: Function) => {
   jwt.verify(
     token,
     process.env.SECRET_KEY_ACESS,
-    (err: Error, decode:  AuthProps ) => {
+    (err: Error, decode:  AuthPayload ) => {
       if (err) {
         console.error(err);
         return res.sendStatus(403);
       }
-      req.user = decode.user;
-      req.role = decode.role;
+      req.userId = decode.userId;
+      req.userRole = decode.userRole;
       next();
     }
   );
