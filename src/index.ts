@@ -9,6 +9,7 @@ AppDataSource
     .initialize()
     .then(() => {
         console.log('initalized!');
+
     })
     .catch((err) => {
         console.log("Error initalize", err);
@@ -29,6 +30,7 @@ import auth from "./routes/auth"
 import refresh from "./routes/refresh";
 import upload from "./routes/admin/upload";
 import books from "./routes/book";
+import order from './routes/order'
 
 import verifyAcessToken from "./middleware/verifyAccessToken";
 
@@ -39,9 +41,12 @@ app.use('/api/login', login);
 app.use('/api/logout', logout);
 app.use('/api/system-login', login);
 
+
 app.use(verifyAcessToken);
 app.use('/api/upload', upload);
 app.use('/api/books', books);
+app.use('/api/order', order);
+
 // hell
 app.listen(4662, ()=> {
     console.log('server start on port : 4662');

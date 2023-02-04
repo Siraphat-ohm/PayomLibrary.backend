@@ -1,11 +1,11 @@
 import { Request } from "express"
 
-export type payload  = { 
-    user: string,
-    role: number
+export type AuthPayload  = { 
+    userId: string,
+    userRole: number
 }
 
-type Payload =  { user? : string , role? : number , token? : string } 
+type Payload =  AuthPayload & {  token? : string } 
 // declare module "express" {
 declare global {
     namespace Express {

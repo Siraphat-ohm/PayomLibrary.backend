@@ -2,6 +2,8 @@ import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany
 import { Author } from "./Author";
 import { Language } from "./Language";
 import Category from "./Category";
+import { Order } from "./Order";
+
 
 @Entity()
 export class Book extends BaseEntity {
@@ -15,11 +17,11 @@ export class Book extends BaseEntity {
     @Column('text')
     description: string
 
-    @ManyToMany(() => Author, (author) => author.id)
+    @ManyToMany(() => Author, (author) => author.id, { eager : true , cascade : true })
     @JoinTable()
     authors: Author[]
 
-    @ManyToMany(() => Author, (author) => author.id)
+    @ManyToMany(() => Category, (cat) => cat.id , { eager : true , cascade : true })
     @JoinTable()
     categories : Category[]
 
@@ -40,5 +42,6 @@ export class Book extends BaseEntity {
 
     @Column( { nullable: true } )
     thumbnail: string
+
 
 }

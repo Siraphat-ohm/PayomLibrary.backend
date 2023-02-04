@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../entity/User";
 const bcrypt = require('bcrypt');
 import TokenManager from "../token/tokenManager";
-import { payload } from "../types/types";
+import { AuthPayload } from "../types/types";
 
 const handleLogin = async (req:Request, res:Response, next:Function) => {
     let { user, pwd } = req.body;
@@ -18,8 +18,8 @@ const handleLogin = async (req:Request, res:Response, next:Function) => {
         const pwdInput : string = foundUser.passWord
         const role : number = foundUser.role
         
-        const payload : payload = { user:userInput, role:role }
-        const TKM = new TokenManager(payload)
+        const AuthPayload : AuthPayload = { userId: foundUser.id , userRole:role }
+        const TKM = new TokenManager(AuthPayload)
 
         if (await bcrypt.compareSync(pwd, pwdInput)) {
             const accessToken = TKM.generateAcessToken()

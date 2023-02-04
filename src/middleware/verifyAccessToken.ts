@@ -1,24 +1,25 @@
-import { Request, Response } from 'express'
-import jwt from 'jsonwebtoken'
+import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import { AuthPayload } from "../types/types";
 
-type DecodeProps = {
-    user: string
-    role: number
-}
 
-const verifyAcessToken = (req:Request, res:Response, next:Function) => {
-    const authHeader = req.headers.authorization;
-    if(!authHeader) return res.sendStatus(401);
-    const token = authHeader.split(' ')[1]
-    jwt.verify(token, process.env.SECRET_KEY_ACESS, (err:Error, decode: DecodeProps) => {
-        if (err)  {
-            console.error( err )
-            return res.sendStatus(403)
-        }
-        req.user = decode.user;
-        req.role = decode.role;
-        next();
-    })
-}
+const verifyAcessToken = (req: Request, res: Response, next: Function) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.sendStatus(401);
+  const token = authHeader.split(" ")[1];
+  jwt.verify(
+    token,
+    process.env.SECRET_KEY_ACESS,
+    (err: Error, decode:  AuthPayload ) => {
+      if (err) {
+        console.error(err);
+        return res.sendStatus(403);
+      }
+      req.userId = decode.userId;
+      req.userRole = decode.userRole;
+      next();
+    }
+  );
+};
 
-export default verifyAcessToken
+export default verifyAcessToken;

@@ -6,6 +6,8 @@ tmp/
 temp/
 .env
 # WHATS WITH VSCODE KEEP TACKING DIST FOLDER ??????
+# turn out I'm really stupid
 dist/**/*
 dist/
 .gitignore
+

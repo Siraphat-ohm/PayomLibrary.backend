@@ -1,4 +1,4 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./Order";
 
 
@@ -9,9 +9,10 @@ export class Loan extends BaseEntity {
     id: string
 
     @OneToOne(() => Order)
+    @JoinColumn()
     order: Order
 
-    @CreateDateColumn()
+    @Column('date', { default : () => "CURRENT_DATE()" })
     loanDate: Date
 
     @Column('date')

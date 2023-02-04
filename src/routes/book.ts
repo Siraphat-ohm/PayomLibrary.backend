@@ -7,6 +7,7 @@ const router = Router()
 
 router.post('/', verifyRoles( roles.libralian ), async ( req , res , next ) => {
     try {
+
         res.json( await Book.create( req.body ).save() )
     } catch (err) {
         next(err)
