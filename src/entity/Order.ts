@@ -25,7 +25,7 @@ export class Order extends BaseEntity {
 
         const loan = Loan.create({
             order : this,
-            // loanDate : dayjs().toDate(), 
+            //loanDate : dayjs().toDate(), 
             expectDate : dayjs().add(7 , 'day').toDate()
         })
         
