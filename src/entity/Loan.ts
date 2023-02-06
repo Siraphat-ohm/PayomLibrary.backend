@@ -1,7 +1,6 @@
 import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Order } from "./Order";
 
-
 @Entity()
 export class Loan extends BaseEntity {
 

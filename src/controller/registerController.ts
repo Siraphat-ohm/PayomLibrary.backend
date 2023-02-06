@@ -3,16 +3,16 @@ import { User } from "../entity/User";
 const bcrypt = require('bcrypt')
 
 const handleRegister = async(req:Request, res:Response, next:Function) => {
-    let { user, pwd, role } = req.body;
-    if(!user || !pwd) return res.status(400).json({"message": "Username and password are required"})
+    let { email, password, role } = req.body;
+    if(!email || !password) return res.status(400).json({"message": "Username and password are required"})
 
-    const duplicate = await User.find( { where : { userName : user}});
+    const duplicate = await User.find( { where : { email : email}});
     if(duplicate.length != 0) return res.sendStatus(409);
 
     try {
-        let pwdHash:string = bcrypt.hashSync(pwd, 10);
+        let passwordHash: string = bcrypt.hashSync(password, 10);
 
-        await User.insert({ userName:user, passWord:pwdHash, role:role });
+        await User.insert({ email: email, password:passwordHash, role:role });
         res.sendStatus(200);
     } catch (error) {
         next(error); 

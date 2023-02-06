@@ -3,11 +3,11 @@ import { User } from "../entity/User";
 
 const handleAuth = async(req: Request, res:Response, next:Function) => {
     const cookie = req.cookies;
-    if (!!!cookie.jwt) return res.json({"isLogin":false});
+    console.log(!!!cookie);
+    if (!!!cookie.jwt) return res.sendStatus(403);
     try {
         const foundRefresh = await User.findOne( { where : { refreshToken : cookie.jwt }})
-        
-        res.json({"isLogin" : true, "user":foundRefresh.userName, "role":foundRefresh.role, "id":foundRefresh.id });
+        res.sendStatus(200);
         
     } catch(err) {
         console.log(err);

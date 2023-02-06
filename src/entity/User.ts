@@ -8,10 +8,10 @@ export class User extends BaseEntity {
     id: string
 
     @Column()
-    userName: string
+    email: string
 
     @Column("text")
-    passWord: string
+    password: string
 
     @Column( { default : roles.student } )
     role: number
