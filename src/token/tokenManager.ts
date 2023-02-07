@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { AuthPayload } from '../types/types';
+import dotenv from "dotenv"
+dotenv.config()
 
 class TokenManager {
     
@@ -13,7 +15,7 @@ class TokenManager {
     }
 
     generateAcessToken(){
-        this.accessToken = jwt.sign(this.AuthPayload, process.env.SECRET_KEY_ACESS, { expiresIn: "1d" });
+        this.accessToken = jwt.sign(this.AuthPayload, process.env.SECRET_KEY_ACESS, { expiresIn: "15s" });
         return this.accessToken;
     }
 
