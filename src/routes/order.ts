@@ -9,20 +9,37 @@ const router = Router();
 router.post("/", async (req, res, next) => {
   try {
 
+    const books = []
+    
+    for (let order of req.body){
+        for (let i = 0; i < order.quantity; i++) {
+            try {
+                const book = await Book.findOneOrFail({ where : { id: order.id } } )
+                books.push(book)
+            } catch (error) {
+            }
+        }
+    }
+
+    console.log(books);
+    
+
     const order =  Order.create( {
         ...req.body,
         user : { id : req.userId }
     })
 
     console.log( order )
-    res.json(
-        { 
-            order,
-            result : await order.save() 
-        }
-    )
+    res.sendStatus(200);
+    // res.json(
+        // { 
+            // order,
+            // result : await order.save() 
+        // }
+    // )
 
   } catch (err) {
+    console.log(err);
     next(err);
   }
 });
