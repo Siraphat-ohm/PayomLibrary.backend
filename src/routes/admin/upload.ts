@@ -6,6 +6,6 @@ import roles from "../../config/roles.json"
 
 const router = express.Router();
 
-router.post('/', verifyRoles(roles.libralian), uploadController.handleUpload);
+router.get('/',  uploadController.handleUpload);
 
 export = router;

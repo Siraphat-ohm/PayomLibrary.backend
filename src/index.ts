@@ -33,6 +33,10 @@ import books from "./routes/book";
 import order from './routes/order'
 
 import verifyAcessToken from "./middleware/verifyAccessToken";
+import { json } from "body-parser";
+import { Book } from "./entity/Book";
+import { Author } from "./entity/Author";
+app.use('/api/upload', upload);
 
 app.use('/api/refresh', refresh);
 app.use('/api/auth', auth);
@@ -41,9 +45,15 @@ app.use('/api/login', login);
 app.use('/api/logout', logout);
 app.use('/api/system-login', login);
 
+app.get("/book",async(req:Request, res:Response, next:Function) => {
+    res.json({
+        data: await Book.find({
+        })
+        })
+    })
+
 
 app.use(verifyAcessToken);
-app.use('/api/upload', upload);
 app.use('/api/books', books);
 app.use('/api/order', order);
 

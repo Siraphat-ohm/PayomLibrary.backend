@@ -1,8 +1,7 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Author } from "./Author";
 import { Language } from "./Language";
 import Category from "./Category";
-import { Order } from "./Order";
 
 
 @Entity()
@@ -18,14 +17,15 @@ export class Book extends BaseEntity {
     description: string
 
     @ManyToMany(() => Author, (author) => author.id, { eager : true , cascade : true })
-    @JoinTable()
+    @JoinTable( { name : "book_author" })
     authors: Author[]
 
     @ManyToMany(() => Category, (cat) => cat.id , { eager : true , cascade : true })
-    @JoinTable()
+    @JoinTable( { name : "book_category" })
     categories : Category[]
 
     @ManyToOne(() => Language, language => language.id)
+    @JoinColumn( { name: "book_language" })
     language: Language
 
     @Column()
