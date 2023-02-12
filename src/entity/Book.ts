@@ -16,11 +16,11 @@ export class Book extends BaseEntity {
     @Column('text')
     description: string
 
-    @ManyToMany(() => Author, (author) => author.id, { eager : true , cascade : true })
+    @ManyToMany(() => Author, (author) => author.id, { cascade : true })
     @JoinTable( { name : "book_author" })
     authors: Author[]
 
-    @ManyToMany(() => Category, (cat) => cat.id , { eager : true , cascade : true })
+    @ManyToMany(() => Category, (cat) => cat.id , { cascade : true })
     @JoinTable( { name : "book_category" })
     categories : Category[]
 

@@ -29,14 +29,10 @@ import logout from "./routes/logout";
 import auth from "./routes/auth"
 import refresh from "./routes/refresh";
 import upload from "./routes/admin/upload";
-import books from "./routes/book";
-import order from './routes/order'
+import books from "./routes/client/api/book";
+import order from './routes/order';
 
 import verifyAcessToken from "./middleware/verifyAccessToken";
-import { json } from "body-parser";
-import { Book } from "./entity/Book";
-import { Author } from "./entity/Author";
-app.use('/api/upload', upload);
 
 app.use('/api/refresh', refresh);
 app.use('/api/auth', auth);
@@ -45,17 +41,10 @@ app.use('/api/login', login);
 app.use('/api/logout', logout);
 app.use('/api/system-login', login);
 
-app.get("/book",async(req:Request, res:Response, next:Function) => {
-    res.json({
-        data: await Book.find({
-        })
-        })
-    })
-
-
 app.use(verifyAcessToken);
-app.use('/api/books', books);
 app.use('/api/order', order);
+app.use('/api/upload', upload);
+app.use('/api/books', books);
 
 // hell
 app.listen(4662, ()=> {
