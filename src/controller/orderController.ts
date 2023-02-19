@@ -122,17 +122,25 @@ const handleOrder = async( req: Request, res: Response, next:Function) => {
 
 const handleApprove = async( req: Request, res: Response, next: Function ) => {
     try {
-
-        const order = await Order.findOne({ where: { id: req.params.id } });
+        const order = await Order.findOne({ 
+                                            where: { 
+                                                id: req.params.id 
+                                            },
+                                            relations: {
+                                                books: true,
+                                                user: true
+                                            }
+        
+                                        });
 
         if (!order) {
             res.status(404).json({
-                message : "notfound"
+                message : "not found"
             })
         }
 
         res.json(
-            await order.DoApprove(req.userId)
+            await order.DoApprove()
         ) 
 
     } catch (err) {
@@ -141,4 +149,21 @@ const handleApprove = async( req: Request, res: Response, next: Function ) => {
 
 }
 
-export default { getAllOrder, getOrder, getOrderById, handleApprove, handleOrder };
+const handleDiscard = async( req: Request, res: Response, next: Function ) => {
+    try {
+        const order = await Order.findOne({ where: { id: req.params.id } })
+        if(!order) {
+            res.status(404).json({
+                message: "not found"
+            })
+        }
+        res.json(
+            await order.DoDiscard()
+        )
+        
+    } catch (err) {
+        next(err)
+    }
+}
+
+export default { getAllOrder, getOrder, getOrderById, handleApprove, handleOrder, handleDiscard };

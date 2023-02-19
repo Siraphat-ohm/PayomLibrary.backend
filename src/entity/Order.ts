@@ -21,24 +21,23 @@ export class Order extends BaseEntity {
     @Column({ default : false })
     approve : boolean
 
-    async DoApprove(userId: string) {
+    async DoApprove() {
 
         const loan = Loan.create({
             order : this,
-            //loanDate : dayjs().toDate(), 
+            // loanDate : dayjs().toDate(), 
             expectDate : dayjs().add(7 , 'day').toDate()
         })
 
-        await User.update(userId, { isLoan: true })
+        await User.update(this.user.id, { isLoan: true })
         
         this.approve = true        
         await this.save()
 
-        return  await loan.save()
+        return await loan.save()
     }
 
     async DoDiscard() {
-        return await Order.delete(this.id);
+        return this.remove()
     }
-
 }

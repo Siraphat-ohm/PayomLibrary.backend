@@ -6,8 +6,8 @@ import roles from "../config/roles.json"
 const router = express.Router();
 
 router.route("/")
+            .post( orderController.handleOrder )
             .get( orderController.getOrder )
-            .post( orderController.handleOrder );
 
 router.route("/all")
             .get( orderController.getAllOrder );
@@ -17,5 +17,8 @@ router.route("/:id")
 
 router.route("/:id/approve")
             .get( verifyRoles(roles.libralian) ,orderController.handleApprove );
+
+router.route("/:id/discard")
+            .get( verifyRoles(roles.libralian) ,orderController.handleDiscard);
 
 export default router;

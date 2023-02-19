@@ -34,6 +34,7 @@ import order from './routes/order';
 
 import verifyAcessToken from "./middleware/verifyAccessToken";
 
+app.use('/api/upload', upload);
 app.use('/api/refresh', refresh);
 app.use('/api/auth', auth);
 app.use('/api/register', register);
@@ -43,7 +44,6 @@ app.use('/api/system-login', login);
 
 app.use(verifyAcessToken);
 app.use('/api/order', order);
-app.use('/api/upload', upload);
 app.use('/api/books', books);
 
 // hell
