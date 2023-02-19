@@ -7,14 +7,14 @@ export class Loan extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @OneToOne(() => Order, { onDelete: 'CASCADE' })
+    @OneToOne(() => Order, { onDelete: 'CASCADE', eager: true })
     @JoinColumn()
     order: Order
 
-    @Column({ default : () => "CURRENT_TIMESTAMP"})
+    @Column("date")
     loanDate: Date
 
-    @Column('date')
+    @Column("date")
     expectDate: Date
 
     @Column('date', { nullable: true } )

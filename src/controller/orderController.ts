@@ -18,11 +18,7 @@ const getAllOrder = async( req:Request , res:Response , next ) => {
                                             email: true
                                         }
                                     },
-                                relations: {
-                                    books: true,
-                                    user: true
-                                },
-                                            where: {
+                                    where: {
                                                 approve: false
                                             }
                             },)
@@ -126,11 +122,6 @@ const handleApprove = async( req: Request, res: Response, next: Function ) => {
                                             where: { 
                                                 id: req.params.id 
                                             },
-                                            relations: {
-                                                books: true,
-                                                user: true
-                                            }
-        
                                         });
 
         if (!order) {

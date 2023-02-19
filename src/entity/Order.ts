@@ -10,11 +10,11 @@ export class Order extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @ManyToMany(() => Book, (book) => book.id, { cascade: true } )
+    @ManyToMany(() => Book, (book) => book.id, { cascade: true, eager: true } )
     @JoinTable()
     books : Book[]
 
-    @OneToOne(() => User , (u) => u.id, { cascade: true }  )
+    @OneToOne(() => User , (u) => u.id, { cascade: true, eager: true }  )
     @JoinColumn()
     user: User
 
@@ -22,22 +22,27 @@ export class Order extends BaseEntity {
     approve : boolean
 
     async DoApprove() {
-
         const loan = Loan.create({
             order : this,
-            // loanDate : dayjs().toDate(), 
-            expectDate : dayjs().add(7 , 'day').toDate()
+            loanDate : dayjs().format("YYYY-MM-DD"), 
+            expectDate : dayjs().add(7 , 'day').format("YYYY-MM-DD")
         })
 
         await User.update(this.user.id, { isLoan: true })
         
-        this.approve = true        
+        this.approve = true
+        
         await this.save()
 
         return await loan.save()
     }
 
     async DoDiscard() {
+        for (let book of this.books) {
+            book.copies++
+            await Book.save(book);
+        }
         return this.remove()
     }
+
 }

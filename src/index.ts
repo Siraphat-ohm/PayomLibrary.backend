@@ -31,6 +31,7 @@ import refresh from "./routes/refresh";
 import upload from "./routes/admin/upload";
 import books from "./routes/client/api/book";
 import order from './routes/order';
+import recepit from "./routes/admin/reciept";
 
 import verifyAcessToken from "./middleware/verifyAccessToken";
 
@@ -45,7 +46,7 @@ app.use('/api/system-login', login);
 app.use(verifyAcessToken);
 app.use('/api/order', order);
 app.use('/api/books', books);
-
+app.use('/api/receipt', recepit);
 // hell
 app.listen(4662, ()=> {
     console.log('server start on port : 4662');
