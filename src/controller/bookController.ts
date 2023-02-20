@@ -17,26 +17,29 @@ const paginationBooks = async (req:Request, res:Response, next:Function) => {
                 authors: true,
                 categories: true,
                 language: true
-            },
-            select : {
-                authors: {
-                    name: true
-                },
-                categories: {
-                    name: true
-                },
-                id:true,
-                title: true,
-                ISBN: true,
-                copies: true,
-                thumbnail: true
             }
         })
         const skip = calSkip(Number(page), size);
         const take = skip + size;
         data = data.slice(skip, take);
+
+        const result = data.map(item => {
+            return {
+                id: item.id,
+                title: item.title,
+                description: item.description,
+                authors: item.authors.map(item => item.name),
+                categories: item.categories.map(item => item.name),
+                language: item.language.language,
+                ISBN: item.ISBN,
+                pubYear: item.pubYear,
+                page: item.page,
+                copies: item.copies,
+                thumbnail: item.thumbnail
+            }
+        })
         
-        res.json(data);
+        res.json(result);
     } catch (error) {
         console.log(error);
         res.sendStatus(400);

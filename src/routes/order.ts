@@ -12,6 +12,9 @@ router.route("/")
 router.route("/all")
             .get( orderController.getAllOrder );
 
+router.route("/list")
+            .get( orderController.listOrder );
+
 router.route("/:id")
             .get( orderController.getOrderById );
 

@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Author } from "./Author";
 import { Language } from "./Language";
 import Category from "./Category";
@@ -16,15 +16,15 @@ export class Book extends BaseEntity {
     @Column('text')
     description: string
 
-    @ManyToMany(() => Author, (author) => author.id, { cascade : true })
+    @ManyToMany(() => Author, (author) => author.id, { cascade : true, eager: true })
     @JoinTable( { name : "book_author" })
     authors: Author[]
 
-    @ManyToMany(() => Category, (cat) => cat.id , { cascade : true })
+    @ManyToMany(() => Category, (cat) => cat.id , { cascade : true, eager: true })
     @JoinTable( { name : "book_category" })
     categories : Category[]
 
-    @ManyToOne(() => Language, language => language.id)
+    @ManyToOne(() => Language, language => language.id, { eager: true })
     @JoinColumn( { name: "book_language" })
     language: Language
 
@@ -42,6 +42,5 @@ export class Book extends BaseEntity {
 
     @Column( { nullable: true } )
     thumbnail: string
-
 
 }

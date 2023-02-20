@@ -29,7 +29,7 @@ const handleLogin = async (req:Request, res:Response, next:Function) => {
             const user = await User.findOne({where : { email: email_f}})
             await User.update({ email: email_f }, { refreshToken : refreshToken })
             
-            res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: "none", secure : true, maxAge: 24 * 60 * 60 * 1000 })
+            res.cookie('jwt', refreshToken, { maxAge: 24 * 60 * 60 * 1000 } )
             res.json({ accessToken: accessToken, isAdmin: (roles.libralian == user.role) ? true : false }).status(200);
             
         } else {

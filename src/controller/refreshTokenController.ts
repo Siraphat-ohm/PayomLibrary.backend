@@ -6,6 +6,7 @@ import TokenManager from "../token/tokenManager";
 
 const handleRefreshToken = async(req:Request, res:Response) => {
     const cookies = req.cookies;
+    
     if(!cookies?.jwt) return res.sendStatus(401); 
     const refreshToken = cookies.jwt;
     
@@ -21,6 +22,7 @@ const handleRefreshToken = async(req:Request, res:Response) => {
         
     })
     } catch(err) {
+        res.sendStatus(404);
         console.log(err);
     }
     

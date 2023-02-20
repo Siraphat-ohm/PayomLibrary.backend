@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { MoreThanOrEqual } from "typeorm";
 import { Book } from "../entity/Book";
+import { Loan } from "../entity/Loan";
 import { Order } from "../entity/Order";
 import { User } from "../entity/User";
 
@@ -142,7 +143,7 @@ const handleApprove = async( req: Request, res: Response, next: Function ) => {
 
 const handleDiscard = async( req: Request, res: Response, next: Function ) => {
     try {
-        const order = await Order.findOne({ where: { id: req.params.id } })
+        const order = await Order.findOne( { where: { id: req.params.id } } )
         if(!order) {
             res.status(404).json({
                 message: "not found"
@@ -157,4 +158,27 @@ const handleDiscard = async( req: Request, res: Response, next: Function ) => {
     }
 }
 
-export default { getAllOrder, getOrder, getOrderById, handleApprove, handleOrder, handleDiscard };
+const listOrder = async( req: Request, res: Response, next: Function ) => {
+    try {
+        const order = await Order.find( { where : { user: { id: req.userId } }, relations: {
+            books: {
+                categories: true,
+            }
+        } } );
+    
+        const data = order.map( (item) => {
+            return {
+                id: item.id,
+                title: item.books.map(item => item.title),
+                category: item.books.map(item => item.categories[0].name),
+                ISBN: item.books.map(item => item.ISBN),
+                status: item.approve
+            }
+        })
+        res.json(data)
+    } catch (error) {
+        res.sendStatus(404);
+    }
+}
+
+export default { getAllOrder, getOrder, getOrderById, handleApprove, handleOrder, handleDiscard, listOrder };

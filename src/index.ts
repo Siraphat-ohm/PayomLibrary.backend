@@ -35,6 +35,12 @@ import recepit from "./routes/admin/reciept";
 
 import verifyAcessToken from "./middleware/verifyAccessToken";
 
+app.get("/hello", (req: Request, res: Response) => {
+    res.json({
+        'msg': 'hello'
+    })
+})
+
 app.use('/api/upload', upload);
 app.use('/api/refresh', refresh);
 app.use('/api/auth', auth);
@@ -47,7 +53,7 @@ app.use(verifyAcessToken);
 app.use('/api/order', order);
 app.use('/api/books', books);
 app.use('/api/receipt', recepit);
-// hell
+
 app.listen(4662, ()=> {
-    console.log('server start on port : 4662');
+    console.log('server start on port : 4662' );
 })
