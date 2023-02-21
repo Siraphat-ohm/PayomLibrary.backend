@@ -4,7 +4,7 @@ import { Book } from "../entity/Book";
 const paginationBooks = async (req:Request, res:Response, next:Function) => {
 
     let page = req.params.page;
-    const size = 10;
+    const size = 15;
 
     const calSkip = (page:number, size:number) => {
         return (page - 1) * size;
@@ -50,7 +50,7 @@ const paginationBooks = async (req:Request, res:Response, next:Function) => {
 const getPage = async(req: Request, res: Response, next:Function) => {
     try {
         const data = await Book.count()
-        const page = Math.ceil(data/10);
+        const page = Math.ceil(data/15);
         res.json(
             page
         )
