@@ -1,14 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 import { ApiError } from "./common/ApiError";
+import { HttpStatus } from "./common/HttpStatusCode";
 
 const handleDatabaseError = async( model:any, query:any, args:any ) => {
     try {
         return await query(args);
     } catch (error: any) {
-        console.log(error.code)
         if ( error.code == 'P2025' || error.code == 'P2003' ) {
-            throw new ApiError( `${model} Not Found.`, 404 );
+            throw new ApiError( 'Not Found.', HttpStatus.NOT_FOUND, `${model} Not Found.` );
         };
+        if ( error.code == 'P2002' ) {
+            throw new ApiError( 'Not Found.', HttpStatus.BAD_REQUEST, `${model} Already Exists.` );
+        }
         throw error;
     }
 }
@@ -24,6 +27,9 @@ const prisma = (new PrismaClient()).$extends({
                 return await handleDatabaseError( model, query, args );
             },
             async createMany( { model, query, args }) {
+                return await handleDatabaseError( model, query, args );
+            },
+            async create( { model, query, args }) {
                 return await handleDatabaseError( model, query, args );
             },
         },
