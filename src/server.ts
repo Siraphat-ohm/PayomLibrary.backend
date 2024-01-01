@@ -1,6 +1,6 @@
 import express from "express";
 import errorHandler from "./middleware/errorHandler";
-import router from "./routes/user.route";
+import router from "./routes";
 
 const createServer = () => { 
     const app = express();
