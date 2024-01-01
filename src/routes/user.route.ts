@@ -7,6 +7,32 @@ import prisma from '../utils/client';
 
 const router = Router();
 
+router.post('/register-admin', async(req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const { username, password, register_code } = req.body;
+        if ( register_code !== process.env.REGISTER_CODE ) {
+            throw new ApiError('Incorrect register code', HttpStatus.BAD_REQUEST);
+        }
+        if ( !username || !password ) {
+            throw new ApiError('Missing credentials', HttpStatus.BAD_REQUEST);
+        }
+        if ( password.length < 8 ) {
+            throw new ApiError('Password must be at least 8 characters long', HttpStatus.BAD_REQUEST);
+        }
+        const foundUser = await prisma.user.findFirst({ where: { username } });
+        if ( foundUser ) {
+            throw new ApiError('Username already exists', HttpStatus.BAD_REQUEST);
+        }
+        await prisma.user.create({ data: { username, password: hash(password), role: 'ADMIN' } });
+
+        res.sendStatus(HttpStatus.CREATED);
+
+    } catch (e) {
+        next(e);
+    }
+});
+
 router.post('/register', async(req: Request, res: Response, next: NextFunction) => {
     try {
 
@@ -43,10 +69,11 @@ router.post('/login', async(req: Request, res: Response, next: NextFunction) => 
         }
         const userInfo = {
             username: foundUser.username,
-            id: foundUser.id
+            id: foundUser.id,
+            role: foundUser.role
         };
 
-        const accessToken = generateAccessToken({ username, id: foundUser.id.toString() });
+        const accessToken = generateAccessToken( userInfo );
         res.status(HttpStatus.OK).json({ accessToken, userInfo });
 
     } catch (e) {

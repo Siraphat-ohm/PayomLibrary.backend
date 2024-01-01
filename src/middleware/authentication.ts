@@ -4,7 +4,7 @@ import { verifyToken } from '../utils/token';
 import prisma from '../utils/client';
 import { HttpStatus } from '../utils/common/HttpStatusCode';
 
-const verify = async(req: Request, res: Response, next: NextFunction) => {
+const authentication = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.headers.authorization?.split(" ")[1];
         if (!token) {
@@ -26,4 +26,4 @@ const verify = async(req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-export default verify;
+export default authentication;

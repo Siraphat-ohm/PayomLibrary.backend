@@ -1,14 +1,15 @@
 import { Router } from "express";
-import verify from "../middleware/verifyToken";
+import authentication from "../middleware/authentication";
 import userRoute from "./user.route";
+import authorization from "../middleware/authorization";
 
 
 const router = Router();
 
-router.use('/user', userRoute);
-router.use(verify);
-router.get('/test', (req, res) => {
-    res.send("Hello World!");
+router.use(userRoute);
+router.use(authentication);
+router.use('/test', authorization(['ADMIN']), (req, res) => {
+    res.json({ message: "Hello World" });
 });
 
 export default router;

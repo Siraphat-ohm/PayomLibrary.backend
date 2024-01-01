@@ -1,4 +1,7 @@
+import { Role } from "@prisma/client";
+
 export interface UserPayload {
-    id?: string;
+    id: string | number;
     username: string;
+    role: Role
 }
