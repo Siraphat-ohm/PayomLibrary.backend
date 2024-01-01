@@ -52,6 +52,7 @@ router.get('/', async ( req: Request, res: Response, next: NextFunction ) => {
                 title: true,
                 ISBN: true,
                 language: true,
+                stock: true,
                 authors: {
                     select: { id: true, name: true }
                 },
@@ -75,6 +76,7 @@ router.get('/:id', async ( req: Request, res: Response, next: NextFunction ) => 
                 title: true, 
                 ISBN: true, 
                 language: true, 
+                stock: true,
                 authors: {
                     select: { id: true, name: true } 
                 },
@@ -101,14 +103,6 @@ router.put('/:id',
             throw new ApiError('Validation Error', HttpStatus.BAD_REQUEST, 'Invalid language');
         }
 
-        if (authors && (!Array.isArray(authors) || !authors.every(author => typeof author.id === 'number'))) {
-            throw new ApiError('Validation Error', HttpStatus.BAD_REQUEST, 'Invalid authors format');
-        }
-        
-        if (ddc && (!Array.isArray(ddc) || !ddc.every(ddcEntry => typeof ddcEntry.id === 'string'))) {
-            throw new ApiError('Validation Error', HttpStatus.BAD_REQUEST, 'Invalid ddc format');
-        }
-
         const foundBook = await prisma.book.findUniqueOrThrow({ where: { id: Number(id) }, include: { authors: true, ddc: true } });
         const updatedBook = await prisma.book.update({
             where: { id: Number(id) },
@@ -117,10 +111,10 @@ router.put('/:id',
                 ISBN : ISBN || foundBook.ISBN,
                 language: language || foundBook.language,
                 authors: {
-                    set: !!authors ? authors.map((author: { id: number }) => ({ id: author.id })) : foundBook.authors
+                    set: !!authors ? authors.map((author: { id: number }) => ({ id: Number(author.id) })) : foundBook.authors
                 },
                 ddc: {
-                    set: !!ddc ? ddc.map((ddc: { id: number }) => ({ id: ddc.id })) : foundBook.ddc
+                    set: !!ddc ? ddc.map((ddc: { id: number }) => ({ id: String(ddc.id) })) : foundBook.ddc
                 }
             },
             include: {
