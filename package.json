@@ -22,5 +22,8 @@
   },
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts"
+  },
+  "prisma": {
+    "seed": "ts-node ./prisma/seed.ts"
   }
 }

@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.1'
 
 services:
   db:
@@ -15,18 +15,11 @@ services:
       - '${MYSQL_PORT}:3306'
     volumes:
       - PayomLibrary:/var/lib/mysql
-    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-time-zone=Asia/Bangkok']
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    environment:
-      PMA_HOST: db
-      PMA_PORT: ${MYSQL_PORT}
-      MYSQL_ROOT_PASSWORD: 
-    ports:
-      - '${PHPMYADMIN_PORT}:80'
-    depends_on:
-      - db
+    command: [
+              'mysqld', '--character-set-server=utf8mb4', 
+              '--collation-server=utf8mb4_unicode_ci',
+              '--default-time-zone=Asia/Bangkok'
+            ]
 
 volumes:
   PayomLibrary:

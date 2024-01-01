@@ -1,0 +1,66 @@
+[
+        { 
+            "data": {
+                "ISBN": "978-3-16-148410-0",
+                "title": "The Lord of the Rings", 
+                "stock": 10,
+                "language": "EN"
+            },
+            "connect": {
+                "authors" : {
+                    "connect": [{ "id": 1 }, { "id": 2 }]
+                },
+                "ddc" : {
+                    "connect": [ { "id": "8" } ]
+                }
+            }
+        },
+        { 
+            "data": {
+                "ISBN": "978-3-16-148410-1",
+                "title": "The Hobbit",
+                "stock": 4,
+                "language": "EN"
+            },
+            "connect": {
+                "authors" : {
+                    "connect": [{ "id": 1 }, { "id": 2 }]
+                },
+                "ddc" : {
+                    "connect": [ { "id": "8" } ]
+                }
+            }
+        },
+        { 
+            "data": {
+                "ISBN": "978-3-16-148410-2",
+                "title": "Bilbo's Last Song",
+                "stock": 1,
+                "language": "EN"
+            },
+            "connect": {
+                "authors" : {
+                    "connect": [{ "id": 1 }, { "id": 2 }]
+                },
+                "ddc" : {
+                    "connect": [ { "id": "8" } ]
+                }
+            }
+        },
+        {
+            "data": {
+                "ISBN": "978-3-16-148410-3",
+                "title": "Feynman Lectures on Physics",
+                "stock": 5,
+                "language": "EN"
+            },
+            "connect": {
+                "authors" : {
+                    "connect": [{ "id": 1 }, { "id": 2 }]
+                },
+                "ddc" : {
+                    "connect": [ { "id": "4" } ]
+                }
+            }
+        }
+]
