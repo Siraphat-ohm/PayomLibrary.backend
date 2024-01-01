@@ -8,7 +8,10 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
     }
 
     if ( err instanceof ApiError ) {
-        res.status(err.httpCode).json({ error: err.name });
+        res.status(err.httpCode).json({ error: err.message });
+        if ( err.errors ) {
+            console.log(err.errors);
+        }
         return;
     }
 

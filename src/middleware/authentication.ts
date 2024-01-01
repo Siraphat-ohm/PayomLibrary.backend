@@ -8,17 +8,13 @@ const authentication = async(req: Request, res: Response, next: NextFunction) =>
     try {
         const token = req.headers.authorization?.split(" ")[1];
         if (!token) {
-            throw new ApiError("Missing Token", HttpStatus.UNAUTHORIZED);
+            throw new ApiError( 'Missing Token', HttpStatus.UNAUTHORIZED, 'Missing Token' );
         }
         const decoded = verifyToken(token);
         req.payload = decoded;
 
         const userId = req.payload.id;
-        const user = await prisma.user.findUniqueOrThrow({ where: { id: Number(userId) } });
-        
-        if (!user) {
-            throw new ApiError("Invalid user", HttpStatus.UNAUTHORIZED);
-        }
+        await prisma.user.findUniqueOrThrow({ where: { id: Number(userId) } });
 
         next();
     } catch (e) {
